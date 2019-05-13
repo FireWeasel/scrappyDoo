@@ -1,2 +1,2 @@
 # scrappyDo
-Scrapper project for TCI course at Fontys
+Scraper project for TCI course at Fontys
