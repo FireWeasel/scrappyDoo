@@ -7,4 +7,24 @@ package model;
  * @version 0.1
  */
 public class CrawlAction {
+    /**
+     * the number of pages visited by the crawling service
+     */
+    public int nrOfPagesVisited;
+
+    /**
+     *  the number of unique pages visited
+     */
+    public int nrOfUniquePagesVisited;
+
+    /**
+     *  the time elapsed of the scraping
+     */
+    public int timeElapsed;
+
+    /**
+     * the depth of the scraping
+     */
+    public int depth;
+
 }

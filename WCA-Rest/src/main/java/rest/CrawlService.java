@@ -1,9 +1,13 @@
 package rest;
 
-import java.util.ArrayList;
+import model.CrawlAction;
+
+import javax.xml.ws.Response;
+import java.util.List;
 
 /**
  * Crawler service for crawling a website, finding data and getting the last crawled action
+ * @version 0.1
  */
 public class CrawlService {
     /**
@@ -19,25 +23,28 @@ public class CrawlService {
     /**
      * Crawl an entire website
      * @param baseUrl website to crawl
+     * @return a JSON response containing scraped data or empty string
      */
-    public void crawlWholeWebsite(String baseUrl) {
-
+    public Response crawlWholeWebsite(String baseUrl) {
+        return  null;
     }
 
     /**
      * Find data in website
      * @param baseUrl webiste to find data in
      * @param type - type of website
-     * @param keywords - words to look for
+     * @param keyword - filter by which to look for a specific item
+     * @return a JSON response containing scraped data or empty string
      */
-    public void findData(String baseUrl, String type, ArrayList<String> keywords) {
-
+    public Response findData(String baseUrl, String type, String keyword) {
+        return  null;
     }
 
     /**
      * Get the last crawled action
+     * @return a JSON response containing scraped data or empty string
      */
-    public void getLastCrawlingAction() {
-
+    public Response getLastCrawlingAction() {
+        return null;
     }
 }

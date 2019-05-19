@@ -1,9 +1,15 @@
 package rest;
 
+import model.Book;
+import model.Item;
+
+import javax.swing.text.Document;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Crawler for scraping data from a webpage
+ * @version 0.1
  */
 public class Crawler {
     /**
@@ -17,7 +23,7 @@ public class Crawler {
     public ArrayList<String> visitedLinks;
 
     /**
-     * How deep should it crawl for within a website
+     * The depth of crawling the crawler reached
      */
     public Integer depth;
 
@@ -28,10 +34,10 @@ public class Crawler {
     /**
      * Get a page's content
      * @param url - page's url
-     * @return page
+     * @return html content of page
      */
-    public String getPage(String url) {
-        return "page";
+    public Document getPage(String url) {
+        return null;
     }
 
     /**
@@ -54,10 +60,10 @@ public class Crawler {
     /**
      * Get only certain data from one crawled webpage
      * @param type - type of data
-     * @param keywords - words to search for
-     * @return list of filtered scraped data
+     * @param keyword - filter by which to look for a specific item
+     * @return single item of filtered scraped data
      */
-    public Item getSpecificData(String type, ArrayList<String> keywords) {
+    public Item getSpecificData(String type, String keyword) {
         return new Book();
     }
 }
