@@ -16,32 +16,48 @@ public class ScraperTest {
     /**
      * Exception should be thrown if an invalid html content is passed to scrapeData method
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void exceptionIsThrownWhenInvalidHtmlContentIsPassedToScrapeData() {
 
     }
 
     /**
-     * parseMovie method of class Parser should be called if fed a movie element
+     * When passing a valid element, an object of type Item should be returned and be not null
      */
     @Test
-    public void verifyParseMovieIsCalledForAMovieElement() {
+    public void assertReturnedScrapedItemIsNotNullWhenParsingValidElement() {
 
     }
 
     /**
-     * parseBook method of class Parser should be called if fed a book element
+     * Parsed movie is not null when being fed valid html content with one movie object
      */
     @Test
-    public void verifyParseBookIsCalledForABookElement() {
+    public void assertScrapedMovieIsNotNullWhenParsingValidHtmlContent() {
 
     }
 
     /**
-     * parseMusic method of class Parser should be called if fed a music element
+     * Parsed book is not null when being fed valid html content with one book object
      */
     @Test
-    public void verifyParseMusicIsCalledForAMusicElement() {
+    public void assertScrapedBookIsNotNullWhenParsingValidHtmlContent() {
+
+    }
+
+    /**
+     * Parsed music is not null when being fed valid html content with one music object
+     */
+    @Test
+    public void assertScrapedMusicIsNotNullWhenParsingValidHtmlContent() {
+
+    }
+
+    /**
+     * Jsoup should make a connection to a website url inside of the getPage method
+     */
+    @Test
+    public void verifyJsoupConnectFunctionIsBeingCalledInsideGetPage() {
 
     }
 }
