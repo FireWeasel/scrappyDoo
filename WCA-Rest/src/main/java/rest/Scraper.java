@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class meant for recursively finding items in one web page
+ * Scraper is the main class for handling Jsoup scraping logic.
+ * It contains an instance of Parser class which is used for parsing html content into corresponding Item class.
  * @version 0.1
  */
 public class Scraper {
@@ -26,7 +27,7 @@ public class Scraper {
     }
 
     /**
-     * Recursively scrape data form a html page
+     * Scrape data form a html page
      * @param htmlContent - html to scrape
      * @return list of scraped items
      */
