@@ -28,26 +28,9 @@ public class Crawler {
     public Integer depth;
 
     /**
-     * Base url of the crawled website
+     *  An object containing the scraper of the crawler.
      */
-    public String baseUrl;
-    /**
-     * Get a page's content
-     * @param url - page's url
-     * @return html content of page
-     */
-    public Document getPage(String url) {
-        return null;
-    }
-
-    /**
-     * Scrape data form a html page
-     * @param htmlContent - html to scrape
-     * @return list of scraped items
-     */
-    public List<Item> scrapeData(String htmlContent) {
-        return new ArrayList<>();
-    }
+    public Scraper scraper;
 
     /**
      * Get all data from one crawled webpage

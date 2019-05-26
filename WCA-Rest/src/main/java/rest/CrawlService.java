@@ -16,11 +16,6 @@ public class CrawlService {
     public List<CrawlAction> lastActions;
 
     /**
-     * Object used for crawling a website and scraping web pages
-     */
-    public Crawler crawler;
-
-    /**
      * Crawl an entire website
      * @param baseUrl website to crawl
      * @return a JSON response containing scraped data or empty string
