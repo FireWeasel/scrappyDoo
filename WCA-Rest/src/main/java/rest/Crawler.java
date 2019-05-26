@@ -28,7 +28,7 @@ public class Crawler {
     public Integer depth;
 
     /**
-     * Object used to get the data from one web page
+     *  An object containing the scraper of the crawler.
      */
     public Scraper scraper;
 

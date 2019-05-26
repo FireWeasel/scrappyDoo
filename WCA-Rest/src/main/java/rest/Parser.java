@@ -1,46 +1,50 @@
 package rest;
 
-import model.*;
+import model.Book;
+import model.Item;
+import model.Movie;
+import model.Music;
 import org.jsoup.nodes.Element;
 
 /**
- * Class used to transform scraped objects into objects inheriting from the Item interface
- * @version 0.1
+ * Class that handles parsing logic for CrawlerService.
  */
 public class Parser {
     /**
-     * Parse one element
-     * @param element - object to be parsed
-     * @return parsed item
+     * Function that parses Element item of
+     * jsoup library into an Item.
+     * @param element - the element returned by the scraper
+     * @return Item - instance of type Item
      */
-    public Item parse(Element element) {
+    public Item parse(Element element){
         return null;
     }
 
     /**
-     * Parse one movie
-     * @param movie - string to be parsed
-     * @return parsed movie
+     * Function that parses a string extracted
+     * from Element in parse.
+     * @param extractedItem - extracted movie string from the element
+     * @return Movie - instance of type Item
      */
-    public Movie parseMovie(String movie) {
+    public Movie parseMovie(String extractedItem){
         return null;
     }
-
     /**
-     * Parse one book
-     * @param book - string to be parsed
-     * @return parsed book
+     * Function that parses a string extracted
+     * from Element in parse.
+     * @param extractedItem - extracted music string from the element
+     * @return Music - instance of type Item
      */
-    public Book parseBook(String book) {
+    public Music parseMusic(String extractedItem){
         return null;
     }
-
     /**
-     * Parse one music object
-     * @param music - string to be parsed
-     * @return parsed music
+     * Function that parses a string extracted
+     * from Element in parse.
+     * @param extractedItem - extracted book string from the element
+     * @return Book - instance of type Item
      */
-    public Music parseMusic(String music) {
-        return null;
+    public Book parseBook(String extractedItem){
+        return  null;
     }
 }
