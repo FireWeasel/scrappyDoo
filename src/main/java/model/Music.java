@@ -6,13 +6,18 @@ package model;
  * custom director, writers and starts properties.
  */
 public class Music extends Item{
+    public Music(String genre, String format, int year, String title, String artist) {
+        super(genre, format, year, title);
+        this.Artist = artist;
+    }
+
     /**
      * Field containing information about the artist
      * performing the music.
      */
-    public String Artist;
+    private String Artist;
 
-    public Music(String genre, String format, int year, String title, String artist) {
-        super(genre, format, year, title);
+    public String getArtist() {
+        return Artist;
     }
 }
