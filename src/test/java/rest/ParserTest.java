@@ -51,7 +51,7 @@ public class ParserTest {
     }
     private static final Object[] getMusic(){
         return new Object[]{
-                new Object[] {new Music("Clasical", "CD", 2012,"Complete suite", "Bon Jovi"),
+                new Object[] {new Music("Clasical", "CD", 2012,"Complete suite", "Ludwig van Bethoven"),
                         new HashMap<String, String>(){{
                             put("Category", "Music");
                             put("Title", "Complete suite");
