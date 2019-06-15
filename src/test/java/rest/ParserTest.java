@@ -52,27 +52,11 @@ public class ParserTest {
     }
 
     private Parser parser;
-    private Book expectedBook;
-    private Movie expectedMovie;
-    private Music expectedMusic;
 
     @Before
     public void setUp(){
+        // ARRANGE
         parser  = new Parser();
-//        expectedBook = new Book("Sci-fi", "Paperback", 2012, "Book Title");
-        expectedMovie = new Movie("Forrest Gump", "Robert Zemeckis", "Drama", "DVD", 1994, Arrays.asList("Winston Groom", "Eric Roth"),Arrays.asList("Tom Hanks", "Rebecca Williams", "Sally Field", "Michael Conner Humphreys"));
-        expectedMusic = new Music("Rap", "Online", 2001, "Rap song");
-
-        HashMap<String, String> inputPropsOfMovie = new HashMap<>();
-
-        inputPropsOfMovie.put("Category", "Music");
-        inputPropsOfMovie.put("Title", "Forrest Gump");
-        inputPropsOfMovie.put("Genre", "Drama");
-        inputPropsOfMovie.put("Format", "DVD");
-        inputPropsOfMovie.put("Year", "1994");
-        inputPropsOfMovie.put("Director", "Robert Zemeckis");
-        inputPropsOfMovie.put("Writers", "Winston Groom, Eric Roth");
-        inputPropsOfMovie.put("Stars", "Tom Hanks, Rebecca Williams, Sally Field, Michael Conner Humphreys");
     }
     /**
      * Test function that asserts if Item is returned
@@ -88,7 +72,6 @@ public class ParserTest {
     @Test
     public void assertIfMovieCreatedCorrectlyWhenParsingMovieHashMap(){
         // ARRANGE
-        Parser parser = new Parser();
         String director = "Robert Zemeckis";
         String title = "Forrest Gump";
         List<String> stars = new ArrayList<String>(Arrays.asList("Tom Hanks", "Rebecca Williams", "Sally Field", "Michael Conner Humphreys"));
@@ -120,8 +103,10 @@ public class ParserTest {
     @Test
     @Parameters(method="getItem")
     public void assertIfBookCreatedCorrectlyWhenParsingBookHashMap(Book book, HashMap<String,String> itemParams){
+        // ACT
         Book resultBook = parser.parseBook(itemParams);
 
+        // ASSERT
         assertThat("Failing when object props do not match.",book, new ReflectionEquals(resultBook));
     }
     /**
