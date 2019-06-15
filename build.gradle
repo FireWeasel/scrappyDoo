@@ -22,6 +22,7 @@ dependencies {
     testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
     // https://mvnrepository.com/artifact/org.hamcrest/java-hamcrest
     testCompile group: 'org.hamcrest', name: 'java-hamcrest', version: '2.0.0.0'
+    testCompile 'pl.pragmatists:JUnitParams:1.1.1'
 }
 
 jacocoTestReport {

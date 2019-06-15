@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 /**
  * Derived class for a book
  * @version 0.1
@@ -8,7 +10,7 @@ public class Book extends Item {
     /**
      * authors of the book
      */
-    public String authors;
+    public List<String> authors;
     /**
      * publishers of the book
      */
