@@ -45,7 +45,16 @@ public class Parser {
      * @return parsed book
      */
     public Book parseBook(HashMap<String, String> book) {
-        return null;
+        String genre = book.get("Genre");
+        String format = book.get("Format");
+        String title = book.get("Title");
+        int year = Integer.valueOf(book.get("Year"));
+        String publisher = book.get("Publisher");
+        String isbn = book.get("ISBN");
+        List<String> authors = Arrays.stream(book.get("Authors").split(",")).map(String::trim).collect(Collectors.toList());
+
+        Book returnBook = new Book(genre, format, year, title, authors, publisher, isbn);
+        return returnBook;
     }
 
     /**

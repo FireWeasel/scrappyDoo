@@ -20,7 +20,10 @@ public class Book extends Item {
      */
     public String isbn;
 
-    public Book(String genre, String format, int year, String title) {
+    public Book(String genre, String format, int year, String title, List<String> authors, String publisher, String isbn) {
         super(genre, format, year, title);
+        this.authors = authors;
+        this.publisher = publisher;
+        this.isbn = isbn;
     }
 }

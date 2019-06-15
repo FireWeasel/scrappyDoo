@@ -26,26 +26,28 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ParserTest {
     private static final Object[] getItem(){
         return new Object[]{
-                new Object[] {new Book("Sci-fi", "Paperback", 2012,"Book Title"), new HashMap<String, String>(){{
-                    put("Category", "Books");
-                    put("Title", "Book Title");
-                    put("Format", "Paperback");
-                    put("Genre", "Sci-fi");
-                    put("Year", "2012");
-                    put("Authors", "\"Winston Groom\", \"Eric Roth\"");
-                    put("ISBN", "978-0132350884");
-                    put("Publisher","MyBooks.com");
+                new Object[] {new Book("Sci-fi", "Paperback", 2012,"Book Title",new ArrayList<String>(Arrays.asList("Winston Groom", "Eric Roth")),"MyBooks.com","978-0132350884"),
+                        new HashMap<String, String>(){{
+                            put("Category", "Books");
+                            put("Title", "Book Title");
+                            put("Format", "Paperback");
+                            put("Genre", "Sci-fi");
+                            put("Year", "2012");
+                            put("Authors", "Winston Groom, Eric Roth");
+                            put("ISBN", "978-0132350884");
+                            put("Publisher","MyBooks.com");
                 }}}
                 ,
-                new Object[]{new Book("Drama", "Online", 2016, "Book Title 2"),new HashMap<String, String>(){{
-                    put("Category", "Books");
-                    put("Title", "Book Title 2");
-                    put("Format", "Online");
-                    put("Genre", "Drama");
-                    put("Year", "2016");
-                    put("Authors", "\"Winston Groom\", \"Eric Roth\"");
-                    put("ISBN", "978-0132350884");
-                    put("Publisher","MyBooks.com");
+                new Object[]{new Book("Drama", "Online", 2016, "Book Title 2",new ArrayList<String>(Arrays.asList("Eric Roth")),"MyBooks.com","978-0132350884"),
+                        new HashMap<String, String>(){{
+                            put("Category", "Books");
+                            put("Title", "Book Title 2");
+                            put("Format", "Online");
+                            put("Genre", "Drama");
+                            put("Year", "2016");
+                            put("Authors", "Eric Roth");
+                            put("ISBN", "978-0132350884");
+                            put("Publisher","MyBooks.com");
                 }}}};
     }
 
@@ -57,7 +59,7 @@ public class ParserTest {
     @Before
     public void setUp(){
         parser  = new Parser();
-        expectedBook = new Book("Sci-fi", "Paperback", 2012, "Book Title");
+//        expectedBook = new Book("Sci-fi", "Paperback", 2012, "Book Title");
         expectedMovie = new Movie("Forrest Gump", "Robert Zemeckis", "Drama", "DVD", 1994, Arrays.asList("Winston Groom", "Eric Roth"),Arrays.asList("Tom Hanks", "Rebecca Williams", "Sally Field", "Michael Conner Humphreys"));
         expectedMusic = new Music("Rap", "Online", 2001, "Rap song");
 
@@ -118,13 +120,6 @@ public class ParserTest {
     @Test
     @Parameters(method="getItem")
     public void assertIfBookCreatedCorrectlyWhenParsingBookHashMap(Book book, HashMap<String,String> itemParams){
-        List<String> authors =  new ArrayList<String>(Arrays.asList("Winston Groom", "Eric Roth"));
-        String isbn = "978-0132350884";
-        String publisher = "MyBooks.com";
-        book.authors=  authors;
-        book.isbn = isbn;
-        book.publisher = publisher;
-
         Book resultBook = parser.parseBook(itemParams);
 
         assertThat("Failing when object props do not match.",book, new ReflectionEquals(resultBook));
