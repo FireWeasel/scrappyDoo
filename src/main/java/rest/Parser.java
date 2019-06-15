@@ -4,7 +4,10 @@ import model.*;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Class used to transform scraped objects into objects inheriting from the Item interface
@@ -26,7 +29,28 @@ public class Parser {
      * @return parsed movie
      */
     public Movie parseMovie(HashMap<String, String> movie) {
-        return null;
+        Movie returnMovie = new Movie();
+        String genre = movie.get("Genre");
+        String format = movie.get("Format");
+        int year = Integer.valueOf(movie.get("Year"));
+        String director = movie.get("Director");
+        List<String> writers = new ArrayList();
+        for(String writer: movie.get("Writers").split(",")){
+            writers.add(writer.trim());
+        }
+        List<String> stars = new ArrayList<>();
+        for(String star: movie.get("Stars").split(",")){
+            stars.add(star.trim());
+        }
+
+        returnMovie.Director = director;
+        returnMovie.Writers = writers;
+        returnMovie.Year = year;
+        returnMovie.Format = format;
+        returnMovie.Genre = genre;
+        returnMovie.Stars = stars;
+
+        return returnMovie;
     }
 
     /**

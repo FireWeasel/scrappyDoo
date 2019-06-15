@@ -4,6 +4,8 @@ import model.Movie;
 import org.junit.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -29,8 +31,8 @@ public class ParserTest {
         Parser parser = new Parser();
         Movie expectedMovie = new Movie();
         expectedMovie.Director = "Robert Zemeckis";
-        expectedMovie.Stars = new String[]{"Tom Hanks", "Rebecca Williams","Sally Field", "Michael Conner Humphreys"};
-        expectedMovie.Writers = new String[]{"Winston Groom", "Eric Roth"};
+        expectedMovie.Stars = new ArrayList<String>(Arrays.asList("Tom Hanks", "Rebecca Williams", "Sally Field", "Michael Conner Humphreys"));
+        expectedMovie.Writers = new ArrayList<String>(Arrays.asList("Winston Groom", "Eric Roth"));
         expectedMovie.Genre = "Drama";
         expectedMovie.Year = 1994;
         expectedMovie.Format = "DVD";
