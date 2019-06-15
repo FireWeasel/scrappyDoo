@@ -2,6 +2,9 @@ package rest;
 
 import model.*;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.util.HashMap;
 
 /**
  * Class used to transform scraped objects into objects inheriting from the Item interface
@@ -10,10 +13,10 @@ import org.jsoup.nodes.Element;
 public class Parser {
     /**
      * Parse one element
-     * @param element - object to be parsed
+     * @param elements - object to be parsed
      * @return parsed item
      */
-    public Item parse(Element element) {
+    public Item parse(Elements elements) {
         return null;
     }
 
@@ -22,7 +25,7 @@ public class Parser {
      * @param movie - string to be parsed
      * @return parsed movie
      */
-    public Movie parseMovie(String movie) {
+    public Movie parseMovie(HashMap<String, String> movie) {
         return null;
     }
 
@@ -31,7 +34,7 @@ public class Parser {
      * @param book - string to be parsed
      * @return parsed book
      */
-    public Book parseBook(String book) {
+    public Book parseBook(HashMap<String, String> book) {
         return null;
     }
 
@@ -40,7 +43,7 @@ public class Parser {
      * @param music - string to be parsed
      * @return parsed music
      */
-    public Music parseMusic(String music) {
+    public Music parseMusic(HashMap<String, String> music) {
         return null;
     }
 }

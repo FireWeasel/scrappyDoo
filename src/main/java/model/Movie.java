@@ -5,7 +5,7 @@ package model;
  * Inherits all properties of parent class and has
  * custom Artist property.
  */
-public class Movie {
+public class Movie extends Item {
     /**
      * The director of the movie.
      */
@@ -15,10 +15,10 @@ public class Movie {
      * Field containing information about the writers
      * of the movie.
      */
-    public String Writers;
+    public String[] Writers;
     /**
      * Field containing information about the stars
      * participating in the movie.
      */
-    public int Stars;
+    public String[] Stars;
 }

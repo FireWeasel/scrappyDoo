@@ -8,7 +8,7 @@ plugins {
 group 'scrappy-doo'
 version '1.0-SNAPSHOT'
 
-apply plugin: "java"
+
 sourceCompatibility = 1.8
 
 repositories {
@@ -19,6 +19,9 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     // https://mvnrepository.com/artifact/org.jsoup/jsoup
     compile group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
+    // https://mvnrepository.com/artifact/org.hamcrest/java-hamcrest
+    testCompile group: 'org.hamcrest', name: 'java-hamcrest', version: '2.0.0.0'
 }
 
 jacocoTestReport {
