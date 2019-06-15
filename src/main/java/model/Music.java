@@ -12,7 +12,7 @@ public class Music extends Item{
      */
     public String Artist;
 
-    public Music(String genre, String format, int year, String title) {
+    public Music(String genre, String format, int year, String title, String artist) {
         super(genre, format, year, title);
     }
 }

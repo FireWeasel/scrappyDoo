@@ -3,14 +3,13 @@ package rest;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import model.Book;
-import model.Item;
 import model.Movie;
 import model.Music;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,7 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * */
 @RunWith(JUnitParamsRunner.class)
 public class ParserTest {
-    private static final Object[] getItem(){
+    private static final Object[] getBook(){
         return new Object[]{
                 new Object[] {new Book("Sci-fi", "Paperback", 2012,"Book Title",new ArrayList<String>(Arrays.asList("Winston Groom", "Eric Roth")),"MyBooks.com","978-0132350884"),
                         new HashMap<String, String>(){{
@@ -49,6 +48,28 @@ public class ParserTest {
                             put("ISBN", "978-0132350884");
                             put("Publisher","MyBooks.com");
                 }}}};
+    }
+    private static final Object[] getMusic(){
+        return new Object[]{
+                new Object[] {new Music("Clasical", "CD", 2012,"Complete suite", "Bon Jovi"),
+                        new HashMap<String, String>(){{
+                            put("Category", "Music");
+                            put("Title", "Complete suite");
+                            put("Format", "CD");
+                            put("Genre", "Clasical");
+                            put("Year", "2012");
+                            put("Artist", "Ludwig van Bethoven");
+                        }}}
+                ,
+                new Object[]{new Music("Rock", "CD", 2016, "It's my life", "Bon Jovi"),
+                        new HashMap<String, String>(){{
+                            put("Category", "Music");
+                            put("Title", "It's my life");
+                            put("Format", "CD");
+                            put("Genre", "Rock");
+                            put("Year", "2016");
+                            put("Artist", "Bon Jovi");
+                        }}}};
     }
 
     private Parser parser;
@@ -101,7 +122,7 @@ public class ParserTest {
      * when calling parseBook of Parser class.
      * */
     @Test
-    @Parameters(method="getItem")
+    @Parameters(method="getBook")
     public void assertIfBookCreatedCorrectlyWhenParsingBookHashMap(Book book, HashMap<String,String> itemParams){
         // ACT
         Book resultBook = parser.parseBook(itemParams);
@@ -114,7 +135,12 @@ public class ParserTest {
      * when calling parseMusic of Parser class.
      * */
     @Test
-    public void assertIfMusicIsCreatedCorrectlyWhenParsingMusicHashMap(){}
+    @Parameters(method="getMusic")
+    public void assertIfMusicIsCreatedCorrectlyWhenParsingMusicHashMap(Music music, HashMap<String, String> itemParams) throws Exception {
+        Music resultMusic = parser.parseMusic(itemParams);
+
+        assertThat(music,new ReflectionEquals(resultMusic));
+    }
     /**
      * Test function that asserts if null object is returned
      * when calling parse of Parser class.
