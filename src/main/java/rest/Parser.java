@@ -4,10 +4,8 @@ import model.*;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Class used to transform scraped objects into objects inheriting from the Item interface
@@ -29,27 +27,15 @@ public class Parser {
      * @return parsed movie
      */
     public Movie parseMovie(HashMap<String, String> movie) {
-        Movie returnMovie = new Movie();
         String genre = movie.get("Genre");
         String format = movie.get("Format");
+        String title = movie.get("Title");
         int year = Integer.valueOf(movie.get("Year"));
         String director = movie.get("Director");
-        List<String> writers = new ArrayList();
-        for(String writer: movie.get("Writers").split(",")){
-            writers.add(writer.trim());
-        }
-        List<String> stars = new ArrayList<>();
-        for(String star: movie.get("Stars").split(",")){
-            stars.add(star.trim());
-        }
+        List<String> writers = Arrays.stream(movie.get("Writers").split(",")).map(String::trim).collect(Collectors.toList());
+        List<String> stars = Arrays.stream(movie.get("Stars").split(",")).map(String::trim).collect(Collectors.toList());
 
-        returnMovie.Director = director;
-        returnMovie.Writers = writers;
-        returnMovie.Year = year;
-        returnMovie.Format = format;
-        returnMovie.Genre = genre;
-        returnMovie.Stars = stars;
-
+        Movie returnMovie = new Movie(title, director, genre, format,year, writers, stars);
         return returnMovie;
     }
 

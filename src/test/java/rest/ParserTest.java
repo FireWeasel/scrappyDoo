@@ -7,6 +7,7 @@ import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -28,17 +29,19 @@ public class ParserTest {
      * */
     @Test
     public void assertIfMovieCreatedCorrectlyWhenParsingMovieHashMap(){
+        // ARRANGE
         Parser parser = new Parser();
-        Movie expectedMovie = new Movie();
-        expectedMovie.Director = "Robert Zemeckis";
-        expectedMovie.Stars = new ArrayList<String>(Arrays.asList("Tom Hanks", "Rebecca Williams", "Sally Field", "Michael Conner Humphreys"));
-        expectedMovie.Writers = new ArrayList<String>(Arrays.asList("Winston Groom", "Eric Roth"));
-        expectedMovie.Genre = "Drama";
-        expectedMovie.Year = 1994;
-        expectedMovie.Format = "DVD";
-
+        String director = "Robert Zemeckis";
+        String title = "Forrest Gump";
+        List<String> stars = new ArrayList<String>(Arrays.asList("Tom Hanks", "Rebecca Williams", "Sally Field", "Michael Conner Humphreys"));
+        List<String> writers = new ArrayList<String>(Arrays.asList("Winston Groom", "Eric Roth"));
+        String genre = "Drama";
+        int year = 1994;
+        String format = "DVD";
+        Movie expectedMovie = new Movie(title, director, genre, format, year, writers, stars);
         HashMap<String, String> inputItemProps = new HashMap<>();
         inputItemProps.put("Category", "Music");
+        inputItemProps.put("Title", "Forrest Gump");
         inputItemProps.put("Genre", "Drama");
         inputItemProps.put("Format", "DVD");
         inputItemProps.put("Year", "1994");
@@ -46,8 +49,10 @@ public class ParserTest {
         inputItemProps.put("Writers", "Winston Groom, Eric Roth");
         inputItemProps.put("Stars", "Tom Hanks, Rebecca Williams, Sally Field, Michael Conner Humphreys");
 
+        // ACT
         Movie resultMovie = parser.parseMovie(inputItemProps);
 
+        // ASSERT
         assertThat("Failing when object props do not match.",expectedMovie, new ReflectionEquals(resultMovie));
     }
     /**

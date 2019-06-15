@@ -17,4 +17,8 @@ public class Book extends Item {
      * ISBN of the book
      */
     public String isbn;
+
+    public Book(String genre, String format, int year, String title) {
+        super(genre, format, year, title);
+    }
 }

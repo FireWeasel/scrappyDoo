@@ -11,4 +11,8 @@ public class Music extends Item{
      * performing the music.
      */
     public String Artist;
+
+    public Music(String genre, String format, int year, String title) {
+        super(genre, format, year, title);
+    }
 }

@@ -47,6 +47,6 @@ public class Crawler {
      * @return single item of filtered scraped data
      */
     public Item getSpecificData(String type, String keyword) {
-        return new Book();
+        return null;
     }
 }
