@@ -63,6 +63,13 @@ public class Parser {
      * @return parsed music
      */
     public Music parseMusic(HashMap<String, String> music) {
-        return null;
+        String title = music.get("Title");
+        String format = music.get("Format");
+        String genre = music.get("Genre");
+        int year = Integer.valueOf(music.get("Year"));
+        String artist = music.get("Artist");
+
+        Music returnMusic = new Music(genre,format,year,title,artist);
+        return returnMusic;
     }
 }
