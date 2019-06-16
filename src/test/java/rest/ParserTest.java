@@ -295,17 +295,35 @@ public class ParserTest {
      * is thrown when parameters are null for parseMovie.
      * */
     @Test(expected = IllegalArgumentException.class)
-    public void invalidArgumentIsThrownOnNullParametersMovie(){}
+    public void invalidArgumentIsThrownOnNullParametersMovie() throws Exception {
+        expectedMovieProps.put("Title", "");
+        expectedMovieProps.put("Stars", "");
+        expectedMovieProps.put("Year", "0");
+
+        parser.parseMovie(expectedMovieProps);
+    }
     /**
      * Test function that checks if InvalidArgumentException
      * is thrown when parameters are null for parseBook.
      * */
     @Test(expected = IllegalArgumentException.class)
-    public void invalidArgumentIsThrownOnNullParametersBook(){}
+    public void invalidArgumentIsThrownOnNullParametersBook() throws Exception {
+        expectedBookProps.put("Authors", "");
+        expectedBookProps.put("Genre", "");
+        expectedBookProps.put("Year", "0");
+
+        parser.parseBook(expectedBookProps);
+    }
     /**
      * Test function that checks if InvalidArgumentException
      * is thrown when parameters are null for parseMusic.
      * */
     @Test(expected = IllegalArgumentException.class)
-    public void invalidArgumentIsThrownOnNullParametersMusic(){}
+    public void invalidArgumentIsThrownOnNullParametersMusic() throws Exception {
+        expectedMusicProps.put("Format", "");
+        expectedMusicProps.put("Title", "");
+        expectedMusicProps.put("Year", "0");
+
+        parser.parseMusic(expectedMusicProps);
+    }
 }
