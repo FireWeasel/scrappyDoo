@@ -1,7 +1,22 @@
 package rest;
 
+import org.jsoup.Jsoup;
+import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.mockito.verification.VerificationMode;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import org.jsoup.nodes.Document;
+
+import static org.mockito.Mockito.mock;
+import static org.powermock.api.mockito.PowerMockito.*;
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({Crawler.class})
 public class CrawlerTest {
     /**
      * Verifies that a JSOUP object is being created when GetAllData() is being called.
@@ -15,8 +30,14 @@ public class CrawlerTest {
      * Verifies that a Scraper object is being created when GetAllData() is being called.
      */
     @Test
-    public void verifyScraperObjectIsBeingCreatedWhenGetAllDataIsCalled() {
+    public void verifyScraperObjectIsBeingCreatedWhenGetAllDataIsCalled() throws Exception {
+        Crawler crawler = new Crawler();
+        Scraper scraper = mock(Scraper.class);
 
+        PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
+        crawler.getAllData();
+
+        PowerMockito.verifyNew(Scraper.class).withNoArguments();
     }
 
     /**
