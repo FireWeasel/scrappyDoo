@@ -30,6 +30,8 @@ public class Parser {
 
 
             if (elements.size() > 0) {
+                String title = elements.select("h1").text();
+                item.put("Title",title);
                 for (Element element : elements.select("table").select("tbody").select("tr")) {
                     if (element.select("th").text().equals("Category")) {
                         type = element.select("td").text();
