@@ -36,7 +36,7 @@ public class Crawler {
      * Get all data from one crawled webpage
      * @return a list of all scraped data
      */
-    public List<Item> getAllData() {
+    public List<Item> getAllData(String baseUrl) {
         return new ArrayList<>();
     }
 

@@ -42,7 +42,7 @@ public class CrawlerTest {
         Scraper scraper = mock(Scraper.class);
 
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
-        crawler.getAllData();
+        crawler.getAllData("");
 
         PowerMockito.verifyNew(Scraper.class).withNoArguments();
     }
@@ -54,7 +54,7 @@ public class CrawlerTest {
     public void assertIfReturnTypeIsListOfItemsWhenGetAllDataIsCalled() {
         Crawler crawler = new Crawler();
 
-        List<Item> li = crawler.getAllData();
+        List<Item> li = crawler.getAllData("");
 
         Assert.assertTrue(li instanceof ArrayList);
     }
@@ -73,7 +73,7 @@ public class CrawlerTest {
         when(scraper.scrapeData("")).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
-        List<Item> actualResult = crawler.getAllData();
+        List<Item> actualResult = crawler.getAllData("");
 
         Assert.assertEquals(items, actualResult);
     }
@@ -90,7 +90,7 @@ public class CrawlerTest {
         when(scraper.scrapeData("")).thenReturn(new ArrayList<Item>());
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
-        List<Item> actualResult = crawler.getAllData();
+        List<Item> actualResult = crawler.getAllData("");
 
         Assert.assertEquals(items, actualResult);
     }
@@ -204,9 +204,14 @@ public class CrawlerTest {
      * Test if an exception is thrown when the base url passed to the crawler is not found or broken
      * when GetAllData() is being called.
      */
-    @Test
-    public void exceptionIsThrownWhenTheBaseUrlIsNotFoundWhenGetAllDataIsCalled() {
+    @Test(expected = Error.class)
+    public void exceptionIsThrownWhenTheBaseUrlIsNotFoundWhenGetAllDataIsCalled() throws Exception {
+        Crawler crawler = new Crawler();
+        Scraper scraper = mock(Scraper.class);
+        when(scraper.getPage("invalid.url")).thenThrow(Error.class);
+        PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
+        crawler.getAllData("invalid.url");
     }
 
     /**
