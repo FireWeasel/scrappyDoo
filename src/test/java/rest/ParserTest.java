@@ -142,6 +142,7 @@ public class ParserTest {
                 .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Artist")).appendChild(new Element("td").appendText("Ludwig van Beethoven")));
 
         when(elementsMock.size()).thenReturn(5);
+        when(elementsMock.select("h1")).thenReturn(elementsMock);
         when(elementsMock.iterator()).thenReturn(expectedElements);
         when(parserMock.parseMusic(expectedMusicProps)).thenReturn(expectedMusic);
 
@@ -168,6 +169,7 @@ public class ParserTest {
                 .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Stars")).appendChild(new Element("td").appendText("Tom Hanks, Rebecca Williams, Sally Field, Michael Conner Humphreys")));
 
         when(elementsMock.size()).thenReturn(5);
+        when(elementsMock.select("h1")).thenReturn(elementsMock);
         when(elementsMock.iterator()).thenReturn(expectedElements);
         // When the parser mock calls parseMovie with the expectedMovieProps, the real method is called so that we can validate if the returned Item is a real instance of type Movie
         when(parserMock.parseMovie(expectedMovieProps)).thenCallRealMethod();
@@ -200,6 +202,7 @@ public class ParserTest {
                 .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Publisher")).appendChild(new Element("td").appendText("MyBooks.com")));
 
         when(elementsMock.size()).thenReturn(5);
+        when(elementsMock.select("h1")).thenReturn(elementsMock);
         when(elementsMock.iterator()).thenReturn(expectedElements);
         // When the parser mock calls parseBook with the expectedBookProps, the real method is called so that we can validate if the returned Item is a real instance of type Book
         when(parserMock.parseBook(expectedBookProps)).thenCallRealMethod();
@@ -297,6 +300,7 @@ public class ParserTest {
         when(expectedElements.next())
                 .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Category")).appendChild(new Element("td").appendText("Toys")));
 
+        when(elementsMock.select("h1")).thenReturn(elementsMock);
         when(elementsMock.iterator()).thenReturn(expectedElements);
         when(parserMock.parse(elementsMock)).thenCallRealMethod();
 
