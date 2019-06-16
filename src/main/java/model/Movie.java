@@ -5,7 +5,7 @@ package model;
  * Inherits all properties of parent class and has
  * custom Artist property.
  */
-public class Movie {
+public class Movie extends Item {
     /**
      * The director of the movie.
      */
