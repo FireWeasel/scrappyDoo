@@ -17,8 +17,7 @@ import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 
 
@@ -151,6 +150,56 @@ public class ParserTest {
 
         // ASSERT
         Assert.assertNotNull("Null when there are not elements to parse",item);
+    }
+
+    @Test
+    public void verifyItemIsOfCorrectTypeWhenParsingElementsAndCorrectParseFunctionIsCalledForCategoryMovie() throws Exception {
+        Iterator<Element> expectedElements = mock(Iterator.class);
+        when(expectedElements.hasNext()).thenReturn(true, true, true, true, true, true,true,true ,false);
+        when(expectedElements.next())
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Category")).appendChild(new Element("td").appendText("Movie")))
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Genre")).appendChild(new Element("td").appendText("Drama")))
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Title")).appendChild(new Element("td").appendText("Forrest Gump")))
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Format")).appendChild(new Element("td").appendText("DVD")))
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Year")).appendChild(new Element("td").appendText("1994")))
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Director")).appendChild(new Element("td").appendText("Robert Zemeckis")))
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Writers")).appendChild(new Element("td").appendText("Winston Groom, Eric Roth")))
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Stars")).appendChild(new Element("td").appendText("Tom Hanks, Rebecca Williams, Sally Field, Michael Conner Humphreys")));
+
+        when(elementsMock.size()).thenReturn(5);
+        when(elementsMock.iterator()).thenReturn(expectedElements);
+        when(parserMock.parseMovie(expectedMovieProps)).thenCallRealMethod();
+        when(parserMock.parse(elementsMock)).thenCallRealMethod();
+
+        Item item = parserMock.parse(elementsMock);
+
+        verify(parserMock, atLeastOnce()).parseMovie(expectedMovieProps);
+        assertThat(item, instanceOf(Movie.class));
+    }
+
+    @Test
+    public void verifyItemIsOfCorrectTypeWhenParsingElementsAndCorrectParseFunctionIsCalledForCategoryBook() throws Exception {
+        Iterator<Element> expectedElements = mock(Iterator.class);
+        when(expectedElements.hasNext()).thenReturn(true, true, true, true, true, true,true,true ,false);
+        when(expectedElements.next())
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Category")).appendChild(new Element("td").appendText("Book")))
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Genre")).appendChild(new Element("td").appendText("Drama")))
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Title")).appendChild(new Element("td").appendText("Book Title 2")))
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Format")).appendChild(new Element("td").appendText("Online")))
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Year")).appendChild(new Element("td").appendText("2016")))
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Authors")).appendChild(new Element("td").appendText("Eric Roth")))
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("ISBN")).appendChild(new Element("td").appendText("978-0132350884")))
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Publisher")).appendChild(new Element("td").appendText("MyBooks.com")));
+
+        when(elementsMock.size()).thenReturn(5);
+        when(elementsMock.iterator()).thenReturn(expectedElements);
+        when(parserMock.parseBook(expectedBookProps)).thenCallRealMethod();
+        when(parserMock.parse(elementsMock)).thenCallRealMethod();
+
+        Item item = parserMock.parse(elementsMock);
+
+        verify(parserMock, atLeastOnce()).parseBook(expectedBookProps);
+        assertThat(item, instanceOf(Book.class));
     }
     /**
      * Test function that asserts if Movie is returned
