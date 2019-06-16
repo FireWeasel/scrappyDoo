@@ -27,11 +27,20 @@ public class Scraper {
     }
 
     /**
+     * Get all links in one webpage
+     * @param page - the webpage
+     * @return array of links
+     */
+    public ArrayList<String> getAllLinks(Document page) {
+        return new ArrayList<>();
+    }
+
+    /**
      * Scrape data form a html page
      * @param htmlContent - html to scrape
      * @return list of scraped items
      */
-    public List<Item> scrapeData(String htmlContent) {
+    public List<Item> scrapeData(Document htmlContent) {
         return new ArrayList<>();
     }
 }
