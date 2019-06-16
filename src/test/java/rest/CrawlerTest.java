@@ -181,8 +181,16 @@ public class CrawlerTest {
      * any parameters.
      */
     @Test
-    public void verifyExceptionIsNotThrownWhenGetSpecificDataIsCalledWithoutAnyParameters() {
+    public void verifyExceptionIsNotThrownWhenGetSpecificDataIsCalledWithoutAnyParameters() throws Exception {
+        Crawler crawler = new Crawler();
+        Scraper scraper = mock(Scraper.class);
+        List<Item> items = new ArrayList<Item>();
+        items.add(new Book());
+        when(scraper.scrapeData("")).thenReturn(items);
+        PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
+        Item i = crawler.getSpecificData(null, null);
 
+        Assert.assertEquals(items.get(0), i);
     }
 
     /**
