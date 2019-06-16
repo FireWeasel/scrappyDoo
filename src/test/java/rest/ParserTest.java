@@ -154,6 +154,7 @@ public class ParserTest {
 
     @Test
     public void verifyItemIsOfCorrectTypeWhenParsingElementsAndCorrectParseFunctionIsCalledForCategoryMovie() throws Exception {
+        //ARRANGE
         Iterator<Element> expectedElements = mock(Iterator.class);
         when(expectedElements.hasNext()).thenReturn(true, true, true, true, true, true,true,true ,false);
         when(expectedElements.next())
@@ -168,17 +169,24 @@ public class ParserTest {
 
         when(elementsMock.size()).thenReturn(5);
         when(elementsMock.iterator()).thenReturn(expectedElements);
+        // When the parser mock calls parseMovie with the expectedMovieProps, the real method is called so that we can validate if the returned Item is a real instance of type Movie
         when(parserMock.parseMovie(expectedMovieProps)).thenCallRealMethod();
+        // When the parser calls parse function, we call real method with the elementsMock, so that we can validate that parseMovie is called correctly in the switch statement
         when(parserMock.parse(elementsMock)).thenCallRealMethod();
 
+        //ACT
         Item item = parserMock.parse(elementsMock);
 
+        //ASSERT
+        // Here we verify if the parseMovie function of the mocked parser is called at least once.
         verify(parserMock, atLeastOnce()).parseMovie(expectedMovieProps);
+        // Here we assert if the returned item is of the correct category.
         assertThat(item, instanceOf(Movie.class));
     }
 
     @Test
     public void verifyItemIsOfCorrectTypeWhenParsingElementsAndCorrectParseFunctionIsCalledForCategoryBook() throws Exception {
+        // ARRANGE
         Iterator<Element> expectedElements = mock(Iterator.class);
         when(expectedElements.hasNext()).thenReturn(true, true, true, true, true, true,true,true ,false);
         when(expectedElements.next())
@@ -193,12 +201,18 @@ public class ParserTest {
 
         when(elementsMock.size()).thenReturn(5);
         when(elementsMock.iterator()).thenReturn(expectedElements);
+        // When the parser mock calls parseBook with the expectedBookProps, the real method is called so that we can validate if the returned Item is a real instance of type Book
         when(parserMock.parseBook(expectedBookProps)).thenCallRealMethod();
+        // When the parser calls parse function, we call real method with the elementsMock, so that we can validate that parseBook is called correctly in the switch statement
         when(parserMock.parse(elementsMock)).thenCallRealMethod();
 
+        //ACT
         Item item = parserMock.parse(elementsMock);
 
+        //ASSERT
+        // Here we verify if the parseBook function of the mocked parser is called at least once.
         verify(parserMock, atLeastOnce()).parseBook(expectedBookProps);
+        // Here we assert if the returned item is of the correct category.
         assertThat(item, instanceOf(Book.class));
     }
     /**
