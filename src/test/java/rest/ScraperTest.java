@@ -2,6 +2,8 @@ package rest;
 
 import org.junit.Test;
 
+import org.jsoup.nodes.Document;
+
 import static org.junit.Assert.*;
 
 public class ScraperTest {
@@ -22,7 +24,8 @@ public class ScraperTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void exceptionIsThrownWhenInvalidHtmlContentIsPassedToScrapeData() {
-
+        Document INVALID_HTML = new Document(INVALID_URL);
+        scraper.scrapeData(INVALID_HTML);
     }
 
     /**
