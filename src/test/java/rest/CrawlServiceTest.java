@@ -1,5 +1,6 @@
 package rest;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
@@ -13,6 +14,17 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({CrawlService.class})
 public class CrawlServiceTest {
+    private CrawlService crawlService;
+    private Crawler crawlMock;
+    private String domain;
+    private String baseUri;
+    @Before
+    public void setUp(){
+        crawlService = new CrawlService();
+        crawlMock = mock(Crawler.class);
+        domain = "http://i357989.hera.fhict.nl";
+        baseUri = "http://i357989.hera.fhict.nl/catalog.php";
+    }
     /**
      * Test function that verifies
      * getAllData of Crawler is called when calling
@@ -20,16 +32,15 @@ public class CrawlServiceTest {
      */
     @Test
     public void verifyGetAllDataIsCalledOfCrawlerWhenCrawlingWholeWebsite() throws Exception {
-        CrawlService crawlService = new CrawlService();
-        Crawler crawler = mock(Crawler.class);
-        String domain = "http://i357989.hera.fhict.nl";
-        String baseUri = "http://i357989.hera.fhict.nl/catalog.php";
-        PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawler);
+        //ARRANGE
+        PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
 
+        //ACT
         crawlService.crawlWholeWebsite(baseUri);
 
+        //ASSERT
         PowerMockito.verifyNew(Crawler.class).withArguments(domain);
-        verify(crawler, atLeastOnce()).getAllData(baseUri);
+        verify(crawlMock, atLeastOnce()).getAllData(baseUri);
     }
 
     /**
