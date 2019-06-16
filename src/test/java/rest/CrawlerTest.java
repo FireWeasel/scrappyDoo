@@ -4,12 +4,9 @@ import model.Book;
 import model.Item;
 import model.Movie;
 import model.Music;
-import org.jsoup.Jsoup;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.mockito.verification.VerificationMode;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -137,7 +134,7 @@ public class CrawlerTest {
         Scraper scraper = mock(Scraper.class);
 
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
-        crawler.getSpecificData(null, null);
+        crawler.getSpecificData("", null, null);
 
         PowerMockito.verifyNew(Scraper.class).withNoArguments();
     }
@@ -154,7 +151,7 @@ public class CrawlerTest {
         items.add(new Book());
         when(scraper.scrapeData("")).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
-        Item i = crawler.getSpecificData(null, "");
+        Item i = crawler.getSpecificData("", null, "");
 
         Assert.assertEquals(items.get(0), i);
     }
@@ -171,7 +168,7 @@ public class CrawlerTest {
         items.add(new Book());
         when(scraper.scrapeData("")).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
-        Item i = crawler.getSpecificData("", null);
+        Item i = crawler.getSpecificData("", "", null);
 
         Assert.assertEquals(items.get(0), i);
     }
@@ -188,7 +185,7 @@ public class CrawlerTest {
         items.add(new Book());
         when(scraper.scrapeData("")).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
-        Item i = crawler.getSpecificData(null, null);
+        Item i = crawler.getSpecificData("", null, null);
 
         Assert.assertEquals(items.get(0), i);
     }
@@ -209,7 +206,7 @@ public class CrawlerTest {
         when(scraper.scrapeData("")).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
-        Item actualResult = crawler.getSpecificData("", "");
+        Item actualResult = crawler.getSpecificData("", "", "");
 
         Assert.assertEquals(items.get(0), actualResult);
     }
@@ -226,7 +223,7 @@ public class CrawlerTest {
         when(scraper.scrapeData("")).thenReturn(new ArrayList<Item>());
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
-        Item actualResult = crawler.getSpecificData("", "");
+        Item actualResult = crawler.getSpecificData("", "", "");
 
         Assert.assertEquals(null, actualResult);
     }
@@ -249,8 +246,13 @@ public class CrawlerTest {
      * Test if an exception is thrown when the base url passed to the crawler is not found or broken
      * when GetSpecificData() is being called.
      */
-    @Test
-    public void exceptionIsThrownWhenTheBaseUrlIsNotFoundWhenGetSpecificDataIsCalled() {
+    @Test(expected = Error.class)
+    public void exceptionIsThrownWhenTheBaseUrlIsNotFoundWhenGetSpecificDataIsCalled() throws Exception {
+        Crawler crawler = new Crawler();
+        Scraper scraper = mock(Scraper.class);
+        when(scraper.getPage("invalid.url")).thenThrow(Error.class);
+        PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
+        crawler.getSpecificData("invalid.url", "", "");
     }
 }

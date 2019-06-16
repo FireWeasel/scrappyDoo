@@ -46,7 +46,7 @@ public class Crawler {
      * @param keyword - filter by which to look for a specific item
      * @return single item of filtered scraped data
      */
-    public Item getSpecificData(String type, String keyword) {
+    public Item getSpecificData(String baseUrl, String type, String keyword) {
         return new Book();
     }
 }
