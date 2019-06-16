@@ -1,10 +1,14 @@
 package rest;
 
-import model.*;
-import org.jsoup.nodes.Element;
+import model.Book;
+import model.Item;
+import model.Movie;
+import model.Music;
 import org.jsoup.select.Elements;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**

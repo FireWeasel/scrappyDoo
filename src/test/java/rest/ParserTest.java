@@ -3,19 +3,21 @@ package rest;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import model.Book;
+import model.Item;
 import model.Movie;
 import model.Music;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.*;
 
 
 /**
@@ -73,11 +75,13 @@ public class ParserTest {
     }
 
     private Parser parser;
+    private Music expectedMusic;
 
     @Before
     public void setUp(){
         // ARRANGE
         parser  = new Parser();
+        expectedMusic = new Music("Clasical", "CD" , 2012, "Symphony","Ludwig van Beethoven");
     }
     /**
      * Test function that asserts if Item is returned
@@ -85,7 +89,39 @@ public class ParserTest {
      * Element that is passed as argument is mocked.
      * */
     @Test
-    public void assertItemIsReturnedWhenParsingExistingElements(){}
+    public void assertItemIsReturnedWhenParsingExistingElements(){
+        HashMap<String, String> expectedItemProps = new HashMap<>();
+        expectedItemProps.put("Category", "Book");
+        expectedItemProps.put("Genre", "Clasical");
+        expectedItemProps.put("Format", "CD");
+        expectedItemProps.put("Year", "2012");
+        expectedItemProps.put("Title", "Symphony");
+        expectedItemProps.put("Artist", "Ludwig van Beethoven");
+        Iterator<Element> expectedElements = mock(Iterator.class);
+        when(expectedElements.hasNext()).thenReturn(true, true, true, true, true, false);
+        when(expectedElements.next())
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Category")).appendChild(new Element("td").appendText("Music")))
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Genre")).appendChild(new Element("td").appendText("Clasical")))
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Title")).appendChild(new Element("td").appendText("Symphony")))
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Format")).appendChild(new Element("td").appendText("CD")))
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Year")).appendChild(new Element("td").appendText("2012")))
+                .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Artist")).appendChild(new Element("td").appendText("Ludwig van Beethoven")));
+
+        Elements elements = mock(Elements.class);
+        Parser mockParser = mock(Parser.class);
+        when(elements.size()).thenReturn(5);
+        when(elements.select("table")).thenReturn(elements);
+        when(elements.select("tbody")).thenReturn(elements);
+        when(elements.select("tr")).thenReturn(elements);
+        when(elements.iterator()).thenReturn(expectedElements);
+        when(mockParser.parseMusic(expectedItemProps)).thenReturn(expectedMusic);
+
+        Item item = parser.parse(elements);
+
+
+
+        Assert.assertNotNull("Null when there are not elements to parse",item);
+    }
     /**
      * Test function that asserts if Movie is returned
      * when calling parseMovie of Parser class.
