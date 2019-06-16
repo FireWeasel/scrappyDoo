@@ -1,5 +1,6 @@
 package rest;
 
+import model.Item;
 import org.jsoup.Jsoup;
 import org.junit.Assert;
 import org.junit.Test;
@@ -11,6 +12,9 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import org.jsoup.nodes.Document;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -45,7 +49,11 @@ public class CrawlerTest {
      */
     @Test
     public void assertIfReturnTypeIsListOfItemsWhenGetAllDataIsCalled() {
+        Crawler crawler = new Crawler();
 
+        List<Item> li = crawler.getAllData();
+
+        Assert.assertTrue(li instanceof ArrayList);
     }
 
     /**
