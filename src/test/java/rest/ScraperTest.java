@@ -13,6 +13,7 @@ public class ScraperTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void exceptionIsThrownWhenInvalidUrlIsPassedToGetPage() {
+        // act
         scraper.getPage(INVALID_URL);
     }
 
