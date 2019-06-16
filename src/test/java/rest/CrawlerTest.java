@@ -175,8 +175,16 @@ public class CrawlerTest {
      * is being called.
      */
     @Test
-    public void assertIfReturnTypeIsNullWhenGetSpecificDataIsCalledAndNoItemsAreFound() {
+    public void assertIfReturnTypeIsNullWhenGetSpecificDataIsCalledAndNoItemsAreFound() throws Exception {
+        Crawler crawler = new Crawler();
+        Scraper scraper = mock(Scraper.class);
+        List<Item> items = new ArrayList<Item>();
+        when(scraper.scrapeData("")).thenReturn(new ArrayList<Item>());
+        PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
+        Item actualResult = crawler.getSpecificData("", "");
+
+        Assert.assertEquals(null, actualResult);
     }
 
     /**
