@@ -194,8 +194,10 @@ public class ParserTest {
     @Test
     @Parameters(method="getMusic")
     public void assertIfMusicIsCreatedCorrectlyWhenParsingMusicHashMap(Music music, HashMap<String, String> itemParams) {
+        // ACT
         Music resultMusic = parser.parseMusic(itemParams);
 
+        // ASSERT
         assertThat(music,new ReflectionEquals(resultMusic));
     }
     /**
@@ -206,10 +208,14 @@ public class ParserTest {
      * */
     @Test
     public void nullObjectIsReturnedWhenThereIsNoItemInElement(){
+        // ARRANGE
         when(elementsMock.size()).thenReturn(0);
         when(parserMock.parse(elementsMock)).thenCallRealMethod();
+
+        // ACT
         Item result = parserMock.parse(elementsMock);
 
+        // ASSERT
         assertThat("Should be null, on empty elements",result, is(nullValue()));
     }
 
@@ -221,8 +227,8 @@ public class ParserTest {
      */
     @Test
     public void verifyNoParseMovieMusicOrBookIsCalledWhenItemExistingInElementsIsNotOfOneOfThoseTypes(){
+        // ARRANGE
         when(elementsMock.size()).thenReturn(1);
-
         Iterator<Element> expectedElements = mock(Iterator.class);
         when(expectedElements.hasNext()).thenReturn(true, true, true, true, true, false);
         when(expectedElements.next())
@@ -231,8 +237,10 @@ public class ParserTest {
         when(elementsMock.iterator()).thenReturn(expectedElements);
         when(parserMock.parse(elementsMock)).thenCallRealMethod();
 
+        // ACT
         parserMock.parse(elementsMock);
 
+        // ASSERT
         verify(parserMock, never()).parseMusic(expectedMovieProps);
         verify(parserMock, never()).parseBook(expectedBookProps);
         verify(parserMock, never()).parseMovie(expectedMovieProps);
@@ -243,6 +251,7 @@ public class ParserTest {
      * */
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentIsThrownWhenParameterIsNull(){
+        // ACT
         parser.parse(null);
     }
     /**
