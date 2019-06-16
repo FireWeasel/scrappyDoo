@@ -76,12 +76,20 @@ public class ParserTest {
 
     private Parser parser;
     private Music expectedMusic;
+    private HashMap<String, String> expectedItemProps;
 
     @Before
     public void setUp(){
         // ARRANGE
         parser  = new Parser();
         expectedMusic = new Music("Clasical", "CD" , 2012, "Symphony","Ludwig van Beethoven");
+        expectedItemProps = new HashMap<>();
+        expectedItemProps.put("Category", "Book");
+        expectedItemProps.put("Genre", "Clasical");
+        expectedItemProps.put("Format", "CD");
+        expectedItemProps.put("Year", "2012");
+        expectedItemProps.put("Title", "Symphony");
+        expectedItemProps.put("Artist", "Ludwig van Beethoven");
     }
     /**
      * Test function that asserts if Item is returned
@@ -90,13 +98,7 @@ public class ParserTest {
      * */
     @Test
     public void assertItemIsReturnedWhenParsingExistingElements(){
-        HashMap<String, String> expectedItemProps = new HashMap<>();
-        expectedItemProps.put("Category", "Book");
-        expectedItemProps.put("Genre", "Clasical");
-        expectedItemProps.put("Format", "CD");
-        expectedItemProps.put("Year", "2012");
-        expectedItemProps.put("Title", "Symphony");
-        expectedItemProps.put("Artist", "Ludwig van Beethoven");
+        // ARRANGE
         Iterator<Element> expectedElements = mock(Iterator.class);
         when(expectedElements.hasNext()).thenReturn(true, true, true, true, true, false);
         when(expectedElements.next())
@@ -116,10 +118,10 @@ public class ParserTest {
         when(elements.iterator()).thenReturn(expectedElements);
         when(mockParser.parseMusic(expectedItemProps)).thenReturn(expectedMusic);
 
+        // ACT
         Item item = parser.parse(elements);
 
-
-
+        // ASSERT
         Assert.assertNotNull("Null when there are not elements to parse",item);
     }
     /**
