@@ -5,7 +5,7 @@ package model;
  * Inherits all properties of parent class and has
  * custom director, writers and starts properties.
  */
-public class Music {
+public class Music extends Item {
     /**
      * Field containing information about the artist
      * performing the music.

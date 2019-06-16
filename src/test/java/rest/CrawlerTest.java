@@ -1,6 +1,8 @@
 package rest;
 
+import model.Book;
 import model.Item;
+import model.Movie;
 import org.jsoup.Jsoup;
 import org.junit.Assert;
 import org.junit.Test;
@@ -61,8 +63,18 @@ public class CrawlerTest {
      * item is found in the website when GetAllDataIsCalled().
      */
     @Test
-    public void verifyItemIsBeingAddedToTheListOfAllFoundItemsWhenGetAllDataIsCalled() {
+    public void verifyItemIsBeingAddedToTheListOfAllFoundItemsWhenGetAllDataIsCalled() throws Exception {
+        Crawler crawler = new Crawler();
+        Scraper scraper = mock(Scraper.class);
+        List<Item> items = new ArrayList<Item>();
+        items.add(new Book());
+        items.add(new Movie());
+        when(scraper.scrapeData("")).thenReturn(items);
+        PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
+        List<Item> actualResult = crawler.getAllData();
+
+        Assert.assertEquals(items, actualResult);
     }
 
     /**
