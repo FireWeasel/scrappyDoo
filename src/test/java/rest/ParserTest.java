@@ -31,7 +31,7 @@ public class ParserTest {
         return new Object[]{
                 new Object[] {new Book("Sci-fi", "Paperback", 2012,"Book Title",new ArrayList<String>(Arrays.asList("Winston Groom", "Eric Roth")),"MyBooks.com","978-0132350884"),
                         new HashMap<String, String>(){{
-                            put("Category", "Books");
+                            put("Category", "Book");
                             put("Title", "Book Title");
                             put("Format", "Paperback");
                             put("Genre", "Sci-fi");
@@ -43,7 +43,7 @@ public class ParserTest {
                 ,
                 new Object[]{new Book("Drama", "Online", 2016, "Book Title 2",new ArrayList<String>(Arrays.asList("Eric Roth")),"MyBooks.com","978-0132350884"),
                         new HashMap<String, String>(){{
-                            put("Category", "Books");
+                            put("Category", "Book");
                             put("Title", "Book Title 2");
                             put("Format", "Online");
                             put("Genre", "Drama");
@@ -260,8 +260,10 @@ public class ParserTest {
      * */
     @Test (expected = Exception.class)
     public void exceptionShouldBeThrownWhenMovieHashMapDoesNotContainMovie() throws Exception {
+        // ARRANGE
         expectedMovieProps.put("Category", "Book");
 
+        //ACT
         parser.parseMovie(expectedMovieProps);
     }
     /**
@@ -270,8 +272,10 @@ public class ParserTest {
      * */
     @Test (expected = Exception.class)
     public void exceptionShouldBeThrownWhenBookHashMapDoesNotContainBook() throws Exception {
+        //ARRANGE
         expectedBookProps.put("Category", "Music");
 
+        // ACT
         parser.parseBook(expectedBookProps);
     }
     /**
@@ -280,8 +284,10 @@ public class ParserTest {
      * */
     @Test (expected = Exception.class)
     public void exceptionShouldBeThrownWhenMusicHashMapDoesNotContainMusic() throws Exception {
+        // ARRANGE
         expectedMusicProps.put("Category", "Movie");
 
+        // ACT
         parser.parseMusic(expectedMusicProps);
     }
     /**
