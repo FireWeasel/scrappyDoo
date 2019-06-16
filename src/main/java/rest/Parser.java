@@ -28,7 +28,7 @@ public class Parser {
         Item itemToReturn = null;
 
 
-        if (elements.size() > 0) {
+//        if (elements.size() > 0) {
             for (Element element : elements.select("table").select("tbody").select("tr")) {
                 if (element.select("th").text().equals("Category")) {
                     type = element.select("td").text();
@@ -49,7 +49,7 @@ public class Parser {
                 default:
                     break;
             }
-        }
+//        }
         return itemToReturn;
     }
 
