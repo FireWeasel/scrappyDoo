@@ -124,8 +124,14 @@ public class CrawlerTest {
      * Verifies that a Scraper object is being created when GetSpecificData() is being called.
      */
     @Test
-    public void verifyScraperObjectIsBeingCreatedWhenGetSpecificDataIsCalled() {
+    public void verifyScraperObjectIsBeingCreatedWhenGetSpecificDataIsCalled() throws Exception {
+        Crawler crawler = new Crawler();
+        Scraper scraper = mock(Scraper.class);
 
+        PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
+        crawler.getSpecificData(null, null);
+
+        PowerMockito.verifyNew(Scraper.class).withNoArguments();
     }
 
     /**
