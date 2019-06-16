@@ -1,9 +1,17 @@
 package rest;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.junit.Assert.*;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.mock;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({CrawlService.class})
 public class CrawlServiceTest {
     /**
      * Test function that verifies
@@ -11,7 +19,18 @@ public class CrawlServiceTest {
      * CrawlWholeWebsite endpoint.
      */
     @Test
-    public void verifyGetAllDataIsCalledOfCrawlerWhenCrawlingWholeWebsite(){}
+    public void verifyGetAllDataIsCalledOfCrawlerWhenCrawlingWholeWebsite() throws Exception {
+        CrawlService crawlService = new CrawlService();
+        Crawler crawler = mock(Crawler.class);
+        String domain = "http://i357989.hera.fhict.nl";
+        String baseUri = "http://i357989.hera.fhict.nl/catalog.php";
+        PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawler);
+
+        crawlService.crawlWholeWebsite(baseUri);
+
+        PowerMockito.verifyNew(Crawler.class).withArguments(domain);
+        verify(crawler, atLeastOnce()).getAllData(baseUri);
+    }
 
     /**
      * Test function that verifies
