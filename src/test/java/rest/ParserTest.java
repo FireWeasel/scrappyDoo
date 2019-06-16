@@ -12,7 +12,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 
 import java.util.*;
 
@@ -238,8 +237,10 @@ public class ParserTest {
         Movie resultMovie = parser.parseMovie(expectedMovieProps);
 
         // ASSERT
-        assertThat("Failing when object props do not match.",expectedMovie, new ReflectionEquals(resultMovie));
+//        assertThat("Failing when object props do not match.",expectedMovie, new ReflectionEquals(resultMovie));
+        assertThat("Failing when object props do not match", expectedMovie,equalTo(resultMovie));
     }
+
     /**
      * Test function that asserts if Book is returned
      * when calling parseBook of Parser class.
@@ -251,8 +252,10 @@ public class ParserTest {
         Book resultBook = parser.parseBook(itemParams);
 
         // ASSERT
-        assertThat("Failing when object props do not match.",book, new ReflectionEquals(resultBook));
+//        assertThat("Failing when object props do not match.",book, new ReflectionEquals(resultBook));
+        assertThat("Failing when object props do not match", book, equalTo(resultBook));
     }
+
     /**
      * Test function that asserts if Music is returned
      * when calling parseMusic of Parser class.
@@ -264,7 +267,8 @@ public class ParserTest {
         Music resultMusic = parser.parseMusic(itemParams);
 
         // ASSERT
-        assertThat(music,new ReflectionEquals(resultMusic));
+//        assertThat(music,new ReflectionEquals(resultMusic));
+        assertThat("Failing when object props do not match", music, equalTo(resultMusic));
     }
     /**
      * Test function that asserts if null object is returned
