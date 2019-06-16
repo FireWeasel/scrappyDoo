@@ -22,6 +22,7 @@ public class Book extends Item {
 
     public Book(String genre, String format, int year, String title, List<String> authors, String publisher, String isbn) {
         super(genre, format, year, title);
+        if(publisher == null || isbn == null) throw new IllegalArgumentException("Publisher and ISBN should not be null");
         this.authors = authors;
         this.publisher = publisher;
         this.isbn = isbn;

@@ -133,7 +133,7 @@ public class ParserTest {
     public void assertItemIsReturnedWhenParsingExistingElements() throws Exception {
         // ARRANGE
         Iterator<Element> expectedElements = mock(Iterator.class);
-        when(expectedElements.hasNext()).thenReturn(true, true, true, true, true, false);
+        when(expectedElements.hasNext()).thenReturn(true, true, true, true, true, true, false);
         when(expectedElements.next())
                 .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Category")).appendChild(new Element("td").appendText("Music")))
                 .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Genre")).appendChild(new Element("td").appendText("Clasical")))
@@ -296,8 +296,7 @@ public class ParserTest {
      * */
     @Test(expected = IllegalArgumentException.class)
     public void invalidArgumentIsThrownOnNullParametersMovie() throws Exception {
-        expectedMovieProps.put("Title", "");
-        expectedMovieProps.put("Stars", "");
+        expectedMovieProps.put("Title", null);
         expectedMovieProps.put("Year", "0");
 
         parser.parseMovie(expectedMovieProps);
@@ -308,8 +307,8 @@ public class ParserTest {
      * */
     @Test(expected = IllegalArgumentException.class)
     public void invalidArgumentIsThrownOnNullParametersBook() throws Exception {
-        expectedBookProps.put("Authors", "");
-        expectedBookProps.put("Genre", "");
+        expectedBookProps.put("Genre", null);
+        expectedBookProps.put("Publisher", null);
         expectedBookProps.put("Year", "0");
 
         parser.parseBook(expectedBookProps);
@@ -320,8 +319,7 @@ public class ParserTest {
      * */
     @Test(expected = IllegalArgumentException.class)
     public void invalidArgumentIsThrownOnNullParametersMusic() throws Exception {
-        expectedMusicProps.put("Format", "");
-        expectedMusicProps.put("Title", "");
+        expectedMusicProps.put("Artist", null);
         expectedMusicProps.put("Year", "0");
 
         parser.parseMusic(expectedMusicProps);

@@ -8,6 +8,7 @@ package model;
 public class Music extends Item{
     public Music(String genre, String format, int year, String title, String artist) {
         super(genre, format, year, title);
+        if(artist == null) throw new IllegalArgumentException("Artist should not be null!");
         this.Artist = artist;
     }
 

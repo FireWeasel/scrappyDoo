@@ -10,6 +10,7 @@ import java.util.Objects;
  */
 public abstract class Item {
     public Item(String genre, String format, int year, String title){
+        if(genre == null || format == null || year < 1 || title == null) throw new IllegalArgumentException("Arguments are not correct!");
         this.Genre = genre;
         this.Format = format;
         this.Year = year;

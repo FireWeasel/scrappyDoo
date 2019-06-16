@@ -1,6 +1,5 @@
 package model;
 
-import java.lang.reflect.WildcardType;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,6 +11,7 @@ import java.util.Objects;
 public class Movie extends Item {
     public Movie(String Title, String Director, String Genre, String Format, int Year, List<String> Writers, List<String> Stars){
         super(Genre, Format, Year, Title);
+        if(Director == null) throw new IllegalArgumentException("Director, writers and stars must not be null.");
         this.Director = Director;
         this.Writers = Writers;
         this.Stars = Stars;
