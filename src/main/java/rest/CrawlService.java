@@ -38,6 +38,9 @@ public class CrawlService {
     @Path("wholepage")
     @Produces(MediaType.APPLICATION_JSON)
     public Response crawlWholeWebsite(String baseUrl) {
+        String domain = baseUrl.split("nl/")[0];
+        Crawler crawler = new Crawler(domain + "nl");
+        crawler.getAllData(baseUrl);
         return  null;
     }
 
