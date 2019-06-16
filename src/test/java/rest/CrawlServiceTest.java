@@ -1,5 +1,7 @@
 package rest;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import model.Item;
 import model.Movie;
 import model.Music;
@@ -14,14 +16,14 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.ws.rs.core.Response;
-import java.awt.print.Book;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
@@ -65,23 +67,34 @@ public class CrawlServiceTest {
         List<String> writers = new ArrayList<String>(Arrays.asList("Winston Groom", "Eric Roth"));
         List<Item> expectedListOfItems = Arrays.asList(new Movie("Forrest Gump","Robert Zemeckis", "Drama",
                 "DVD", 1994, writers,stars),new Music("Clasical", "CD" , 2012, "Symphony","Ludwig van Beethoven"));
+        Gson gson = new GsonBuilder().create();
+        List<Item> movies = expectedListOfItems.stream().filter(i -> i instanceof Movie).collect(Collectors.toList());
+        List<Item> books = expectedListOfItems.stream().filter(i -> i instanceof model.Book).collect(Collectors.toList());
+        List<Item> music = expectedListOfItems.stream().filter(i -> i instanceof Music).collect(Collectors.toList());
 
-        JsonObject expectedResponseJson = Json.createObjectBuilder()
-                .add("id", 0)
-                .add("time", "doesn't matter")
-                .add("movies", expectedListOfItems.stream().filter(i -> i.getClass().equals(Movie.class)).map(e -> e.toString()).reduce("", String::concat))
-                .add("music", expectedListOfItems.stream().filter(i -> i.getClass().equals(Music.class)).map(e -> e.toString()).reduce("", String::concat))
-                .add("books", expectedListOfItems.stream().filter(i -> i.getClass().equals(Book.class)).map(e -> e.toString()).reduce("", String::concat))
-                .build();
+        String moviesJson = gson.toJson(movies);
+        String booksJson = gson.toJson(books);
+        String musicJson = gson.toJson(music);
+
         PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
         when(crawlMock.getAllData(baseUri)).thenReturn(expectedListOfItems);
 
         Response response = crawlService.crawlWholeWebsite(baseUri);
+
         JsonReader jsonReader = Json.createReader(new StringReader(response.getEntity().toString()));
         JsonObject returnedJsonResponse = jsonReader.readObject();
         jsonReader.close();
 
+        JsonObject expectedResponseJson = Json.createObjectBuilder()
+                .add("id", 1) //hardcoded since it cannot be calculated
+                .add("time", returnedJsonResponse.get("time"))
+                .add("movies", moviesJson)
+                .add("music", musicJson)
+                .add("books", booksJson)
+                .build();
+
         assertThat(expectedResponseJson, equalTo(returnedJsonResponse));
+
     }
     /**
      * Test function that checks if an
