@@ -3,6 +3,8 @@ package rest;
 import model.Item;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,7 +41,12 @@ public class Scraper {
      * @return array of links
      */
     public ArrayList<String> getAllLinks(Document page) {
-        return new ArrayList<>();
+        Elements elements = page.select("a[href]");
+        ArrayList<String> returnList = new ArrayList<>();
+        for (Element element : elements) {
+            returnList.add(element.attr("href"));
+        }
+        return returnList;
     }
 
     /**
