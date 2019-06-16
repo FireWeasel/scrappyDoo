@@ -5,12 +5,15 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ScraperTest {
+    private static String INVALID_URL = "invalid.url.should.throw";
+    private Scraper scraper = new Scraper();
+
     /**
      * Exception should be thrown if an invalid url is passed to getPage method
      */
     @Test(expected = IllegalArgumentException.class)
     public void exceptionIsThrownWhenInvalidUrlIsPassedToGetPage() {
-
+        scraper.getPage(INVALID_URL);
     }
 
     /**
