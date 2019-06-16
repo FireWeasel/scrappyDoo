@@ -242,7 +242,9 @@ public class ParserTest {
      * when passed parameters are null.
      * */
     @Test(expected = IllegalArgumentException.class)
-    public void illegalArgumentIsThrownWhenParameterIsNull(){}
+    public void illegalArgumentIsThrownWhenParameterIsNull(){
+        parser.parse(null);
+    }
     /**
      * Test function that checks if exception is thrown
      * when passed hashmap does not contain Movie.
