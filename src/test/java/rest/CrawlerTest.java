@@ -82,8 +82,16 @@ public class CrawlerTest {
      * when GetAllData() is being called.
      */
     @Test
-    public void verifyIfAnEmptyListOfItemsIsReturnedWhenNoItemsAreFoundWhenGetAllDataIsCalled() {
+    public void verifyIfAnEmptyListOfItemsIsReturnedWhenNoItemsAreFoundWhenGetAllDataIsCalled() throws Exception {
+        Crawler crawler = new Crawler();
+        Scraper scraper = mock(Scraper.class);
+        List<Item> items = new ArrayList<Item>();
+        when(scraper.scrapeData("")).thenReturn(new ArrayList<Item>());
+        PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
+        List<Item> actualResult = crawler.getAllData();
+
+        Assert.assertEquals(items, actualResult);
     }
 
     /**
