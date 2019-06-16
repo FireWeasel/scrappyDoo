@@ -109,8 +109,15 @@ public class CrawlerTest {
      * from the Scraper when GetAllData() is being called.
      */
     @Test
-    public void verifyIfExceptionIsThrownFromScraperCrawlingIsNotInterruptedWhenGetAllDataIsCalled() {
+    public void verifyIfExceptionIsThrownFromScraperCrawlingIsNotInterruptedWhenGetAllDataIsCalled() throws Exception {
+        Crawler crawler = new Crawler();
+        Scraper scraper = mock(Scraper.class);
+        when(scraper.scrapeData("")).thenThrow(IllegalArgumentException.class);
+        PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
+        List<Item> actualResult = crawler.getAllData("");
+
+        Assert.assertEquals(new ArrayList<Item>(), actualResult);
     }
 
     /**
