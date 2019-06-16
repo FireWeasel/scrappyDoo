@@ -79,19 +79,50 @@ public class ParserTest {
     private Parser parser;
     private Music expectedMusic;
     private HashMap<String, String> expectedMusicProps;
+    private HashMap<String, String> expectedBookProps;
+    private HashMap<String, String> expectedMovieProps;
+    private Elements elementsMock;
+    private Parser parserMock;
 
     @Before
     public void setUp(){
         // ARRANGE
+        elementsMock = mock(Elements.class);
+        parserMock = mock(Parser.class);
         parser  = new Parser();
         expectedMusic = new Music("Clasical", "CD" , 2012, "Symphony","Ludwig van Beethoven");
-        expectedMusicProps = new HashMap<>();
-        expectedMusicProps.put("Category", "Book");
-        expectedMusicProps.put("Genre", "Clasical");
-        expectedMusicProps.put("Format", "CD");
-        expectedMusicProps.put("Year", "2012");
-        expectedMusicProps.put("Title", "Symphony");
-        expectedMusicProps.put("Artist", "Ludwig van Beethoven");
+        expectedMusicProps = new HashMap<String, String>(){{
+            put("Category", "Music");
+            put("Genre", "Clasical");
+            put("Format", "CD");
+            put("Year", "2012");
+            put("Title", "Symphony");
+            put("Artist", "Ludwig van Beethoven");
+        }};
+        expectedBookProps = new HashMap<String, String>(){{
+                put("Category", "Book");
+                put("Title", "Book Title 2");
+                put("Format", "Online");
+                put("Genre", "Drama");
+                put("Year", "2016");
+                put("Authors", "Eric Roth");
+                put("ISBN", "978-0132350884");
+                put("Publisher", "MyBooks.com");
+            }};
+        expectedMovieProps = new HashMap<String, String>(){{
+            put("Category", "Movie");
+            put("Title", "Forrest Gump");
+            put("Genre", "Drama");
+            put("Format", "DVD");
+            put("Year", "1994");
+            put("Director", "Robert Zemeckis");
+            put("Writers", "Winston Groom, Eric Roth");
+            put("Stars", "Tom Hanks, Rebecca Williams, Sally Field, Michael Conner Humphreys");
+        }};
+
+        when(elementsMock.select("table")).thenReturn(elementsMock);
+        when(elementsMock.select("tbody")).thenReturn(elementsMock);
+        when(elementsMock.select("tr")).thenReturn(elementsMock);
     }
     /**
      * Test function that asserts if Item is returned
@@ -111,17 +142,12 @@ public class ParserTest {
                 .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Year")).appendChild(new Element("td").appendText("2012")))
                 .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Artist")).appendChild(new Element("td").appendText("Ludwig van Beethoven")));
 
-        Elements elements = mock(Elements.class);
-        Parser mockParser = mock(Parser.class);
-        when(elements.size()).thenReturn(5);
-        when(elements.select("table")).thenReturn(elements);
-        when(elements.select("tbody")).thenReturn(elements);
-        when(elements.select("tr")).thenReturn(elements);
-        when(elements.iterator()).thenReturn(expectedElements);
-        when(mockParser.parseMusic(expectedMusicProps)).thenReturn(expectedMusic);
+        when(elementsMock.size()).thenReturn(5);
+        when(elementsMock.iterator()).thenReturn(expectedElements);
+        when(parserMock.parseMusic(expectedMusicProps)).thenReturn(expectedMusic);
 
         // ACT
-        Item item = parser.parse(elements);
+        Item item = parser.parse(elementsMock);
 
         // ASSERT
         Assert.assertNotNull("Null when there are not elements to parse",item);
@@ -141,18 +167,9 @@ public class ParserTest {
         int year = 1994;
         String format = "DVD";
         Movie expectedMovie = new Movie(title, director, genre, format, year, writers, stars);
-        HashMap<String, String> inputItemProps = new HashMap<>();
-        inputItemProps.put("Category", "Movie");
-        inputItemProps.put("Title", "Forrest Gump");
-        inputItemProps.put("Genre", "Drama");
-        inputItemProps.put("Format", "DVD");
-        inputItemProps.put("Year", "1994");
-        inputItemProps.put("Director", "Robert Zemeckis");
-        inputItemProps.put("Writers", "Winston Groom, Eric Roth");
-        inputItemProps.put("Stars", "Tom Hanks, Rebecca Williams, Sally Field, Michael Conner Humphreys");
 
         // ACT
-        Movie resultMovie = parser.parseMovie(inputItemProps);
+        Movie resultMovie = parser.parseMovie(expectedMovieProps);
 
         // ASSERT
         assertThat("Failing when object props do not match.",expectedMovie, new ReflectionEquals(resultMovie));
@@ -176,7 +193,7 @@ public class ParserTest {
      * */
     @Test
     @Parameters(method="getMusic")
-    public void assertIfMusicIsCreatedCorrectlyWhenParsingMusicHashMap(Music music, HashMap<String, String> itemParams) throws Exception {
+    public void assertIfMusicIsCreatedCorrectlyWhenParsingMusicHashMap(Music music, HashMap<String, String> itemParams) {
         Music resultMusic = parser.parseMusic(itemParams);
 
         assertThat(music,new ReflectionEquals(resultMusic));
@@ -189,11 +206,9 @@ public class ParserTest {
      * */
     @Test
     public void nullObjectIsReturnedWhenThereIsNoItemInElement(){
-        Elements elements = mock(Elements.class);
-        Parser parserMock = mock(Parser.class);
-        when(elements.size()).thenReturn(0);
-        when(parserMock.parse(elements)).thenCallRealMethod();
-        Item result = parserMock.parse(elements);
+        when(elementsMock.size()).thenReturn(0);
+        when(parserMock.parse(elementsMock)).thenCallRealMethod();
+        Item result = parserMock.parse(elementsMock);
 
         assertThat("Should be null, on empty elements",result, is(nullValue()));
     }
@@ -206,46 +221,17 @@ public class ParserTest {
      */
     @Test
     public void verifyNoParseMovieMusicOrBookIsCalledWhenItemExistingInElementsIsNotOfOneOfThoseTypes(){
-        Elements elements = mock(Elements.class);
-        Parser parserMock = mock(Parser.class);
-        when(elements.size()).thenReturn(1);
-        HashMap<String, String> expectedBookProps = new HashMap<String, String>(){
-            {
-                put("Category", "Books");
-                put("Title", "Book Title 2");
-                put("Format", "Online");
-                put("Genre", "Drama");
-                put("Year", "2016");
-                put("Authors", "Eric Roth");
-                put("ISBN", "978-0132350884");
-                put("Publisher", "MyBooks.com");
-            }};
-
-        HashMap<String, String> expectedMovieProps = new HashMap<>();
-        expectedMovieProps.put("Category", "Music");
-        expectedMovieProps.put("Title", "Forrest Gump");
-        expectedMovieProps.put("Genre", "Drama");
-        expectedMovieProps.put("Format", "DVD");
-        expectedMovieProps.put("Year", "1994");
-        expectedMovieProps.put("Director", "Robert Zemeckis");
-        expectedMovieProps.put("Writers", "Winston Groom, Eric Roth");
-        expectedMovieProps.put("Stars", "Tom Hanks, Rebecca Williams, Sally Field, Michael Conner Humphreys");
+        when(elementsMock.size()).thenReturn(1);
 
         Iterator<Element> expectedElements = mock(Iterator.class);
         when(expectedElements.hasNext()).thenReturn(true, true, true, true, true, false);
         when(expectedElements.next())
                 .thenReturn(new Element("tr").appendChild(new Element("th").appendText("Category")).appendChild(new Element("td").appendText("Toys")));
 
-        when(elements.select("table")).thenReturn(elements);
-        when(elements.select("tbody")).thenReturn(elements);
-        when(elements.select("tr")).thenReturn(elements);
-        when(elements.iterator()).thenReturn(expectedElements);
-        when(parserMock.parse(elements)).thenCallRealMethod();
-        when(parserMock.parseMusic(expectedMovieProps)).thenCallRealMethod();
-        when(parserMock.parseBook(expectedBookProps)).thenCallRealMethod();
-        when(parserMock.parseMovie(expectedMovieProps)).thenCallRealMethod();
+        when(elementsMock.iterator()).thenReturn(expectedElements);
+        when(parserMock.parse(elementsMock)).thenCallRealMethod();
 
-        parserMock.parse(elements);
+        parserMock.parse(elementsMock);
 
         verify(parserMock, never()).parseMusic(expectedMovieProps);
         verify(parserMock, never()).parseBook(expectedBookProps);
