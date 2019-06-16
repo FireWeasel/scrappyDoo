@@ -259,19 +259,31 @@ public class ParserTest {
      * when passed hashmap does not contain Movie.
      * */
     @Test (expected = Exception.class)
-    public void exceptionShouldBeThrownWhenMovieHashMapDoesNotContainMovie(){}
+    public void exceptionShouldBeThrownWhenMovieHashMapDoesNotContainMovie(){
+        expectedMovieProps.put("Category", "Book");
+
+        parser.parseMovie(expectedMovieProps);
+    }
     /**
      * Test function that checks if exception is thrown
      * when passed hashmap does not contain Book.
      * */
     @Test (expected = Exception.class)
-    public void exceptionShouldBeThrownWhenBookHashMapDoesNotContainBook(){}
+    public void exceptionShouldBeThrownWhenBookHashMapDoesNotContainBook(){
+        expectedBookProps.put("Category", "Music");
+
+        parser.parseBook(expectedBookProps);
+    }
     /**
      * Test function that checks if exception is thrown
      * when passed hashmap does not contain Music.
      * */
     @Test (expected = Exception.class)
-    public void exceptionShouldBeThrownWhenMusicHashMapDoesNotContainMusic(){}
+    public void exceptionShouldBeThrownWhenMusicHashMapDoesNotContainMusic(){
+        expectedMusicProps.put("Category", "Movie");
+
+        parser.parseMusic(expectedMusicProps);
+    }
     /**
      * Test function that checks if InvalidArgumentException
      * is thrown when parameters are null for parseMovie.
