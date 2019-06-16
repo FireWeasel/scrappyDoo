@@ -3,6 +3,7 @@ package rest;
 import model.Book;
 import model.Item;
 import model.Movie;
+import model.Music;
 import org.jsoup.Jsoup;
 import org.junit.Assert;
 import org.junit.Test;
@@ -166,8 +167,20 @@ public class CrawlerTest {
      * is being called.
      */
     @Test
-    public void assertIfReturnTypeIsOfTypeItemWhenGetSpecificDataIsCalledAndItemsHaveBeenFound() {
+    public void assertIfReturnTypeIsOfTypeItemWhenGetSpecificDataIsCalledAndItemsHaveBeenFound() throws Exception {
+        Crawler crawler = new Crawler();
+        Scraper scraper = mock(Scraper.class);
+        List<Item> items = new ArrayList<Item>();
+        items.add(new Book());
+        items.add(new Music());
+        items.add(new Book());
+        items.add(new Movie());
+        when(scraper.scrapeData("")).thenReturn(items);
+        PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
+        Item actualResult = crawler.getSpecificData("", "");
+
+        Assert.assertEquals(items.get(0), actualResult);
     }
 
     /**
