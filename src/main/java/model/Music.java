@@ -26,6 +26,7 @@ public class Music extends Item{
 
     @Override
     public boolean equals(Object o) {
+        if(!super.equals(o)) return false;
         if (this == o) return true;
         if (!(o instanceof Music)) return false;
         if (!super.equals(o)) return false;
