@@ -1,8 +1,10 @@
 package rest;
 
 import model.Item;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,11 @@ public class Scraper {
      * @return html content of page
      */
     public Document getPage(String url) {
+        try {
+            return Jsoup.connect(url).get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
