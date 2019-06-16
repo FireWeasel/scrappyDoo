@@ -4,6 +4,7 @@ import model.Book;
 import model.Item;
 import model.Movie;
 import model.Music;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.Arrays;
@@ -22,7 +23,34 @@ public class Parser {
      * @return parsed item
      */
     public Item parse(Elements elements) {
-        return null;
+        String type = "";
+        HashMap<String, String> item = new HashMap<>();
+        Item itemToReturn = null;
+
+
+        if (elements.size() > 0) {
+            for (Element element : elements.select("table").select("tbody").select("tr")) {
+                if (element.select("th").text().equals("Category")) {
+                    type = element.select("td").text();
+                }
+                item.put(element.select("th").text(), element.select("td").text());
+            }
+
+            switch (type) {
+                case "Book":
+                    itemToReturn = parseBook(item);
+                    break;
+                case "Movie":
+                    itemToReturn = parseMovie(item);
+                    break;
+                case "Music":
+                    itemToReturn = parseMusic(item);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return itemToReturn;
     }
 
     /**
