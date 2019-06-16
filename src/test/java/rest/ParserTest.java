@@ -130,7 +130,7 @@ public class ParserTest {
      * Element that is passed as argument is mocked.
      * */
     @Test
-    public void assertItemIsReturnedWhenParsingExistingElements(){
+    public void assertItemIsReturnedWhenParsingExistingElements() throws Exception {
         // ARRANGE
         Iterator<Element> expectedElements = mock(Iterator.class);
         when(expectedElements.hasNext()).thenReturn(true, true, true, true, true, false);
@@ -157,7 +157,7 @@ public class ParserTest {
      * when calling parseMovie of Parser class.
      * */
     @Test
-    public void assertIfMovieCreatedCorrectlyWhenParsingMovieHashMap(){
+    public void assertIfMovieCreatedCorrectlyWhenParsingMovieHashMap() throws Exception {
         // ARRANGE
         String director = "Robert Zemeckis";
         String title = "Forrest Gump";
@@ -180,7 +180,7 @@ public class ParserTest {
      * */
     @Test
     @Parameters(method="getBook")
-    public void assertIfBookCreatedCorrectlyWhenParsingBookHashMap(Book book, HashMap<String,String> itemParams){
+    public void assertIfBookCreatedCorrectlyWhenParsingBookHashMap(Book book, HashMap<String,String> itemParams) throws Exception {
         // ACT
         Book resultBook = parser.parseBook(itemParams);
 
@@ -193,7 +193,7 @@ public class ParserTest {
      * */
     @Test
     @Parameters(method="getMusic")
-    public void assertIfMusicIsCreatedCorrectlyWhenParsingMusicHashMap(Music music, HashMap<String, String> itemParams) {
+    public void assertIfMusicIsCreatedCorrectlyWhenParsingMusicHashMap(Music music, HashMap<String, String> itemParams) throws Exception {
         // ACT
         Music resultMusic = parser.parseMusic(itemParams);
 
@@ -207,7 +207,7 @@ public class ParserTest {
      * Element that is passed as argument is mocked.
      * */
     @Test
-    public void nullObjectIsReturnedWhenThereIsNoItemInElement(){
+    public void nullObjectIsReturnedWhenThereIsNoItemInElement() throws Exception {
         // ARRANGE
         when(elementsMock.size()).thenReturn(0);
         when(parserMock.parse(elementsMock)).thenCallRealMethod();
@@ -226,7 +226,7 @@ public class ParserTest {
      * elements contain something.
      */
     @Test
-    public void verifyNoParseMovieMusicOrBookIsCalledWhenItemExistingInElementsIsNotOfOneOfThoseTypes(){
+    public void verifyNoParseMovieMusicOrBookIsCalledWhenItemExistingInElementsIsNotOfOneOfThoseTypes() throws Exception {
         // ARRANGE
         when(elementsMock.size()).thenReturn(1);
         Iterator<Element> expectedElements = mock(Iterator.class);
@@ -250,7 +250,7 @@ public class ParserTest {
      * when passed parameters are null.
      * */
     @Test(expected = IllegalArgumentException.class)
-    public void illegalArgumentIsThrownWhenParameterIsNull(){
+    public void illegalArgumentIsThrownWhenParameterIsNull() throws Exception {
         // ACT
         parser.parse(null);
     }
@@ -259,7 +259,7 @@ public class ParserTest {
      * when passed hashmap does not contain Movie.
      * */
     @Test (expected = Exception.class)
-    public void exceptionShouldBeThrownWhenMovieHashMapDoesNotContainMovie(){
+    public void exceptionShouldBeThrownWhenMovieHashMapDoesNotContainMovie() throws Exception {
         expectedMovieProps.put("Category", "Book");
 
         parser.parseMovie(expectedMovieProps);
@@ -269,7 +269,7 @@ public class ParserTest {
      * when passed hashmap does not contain Book.
      * */
     @Test (expected = Exception.class)
-    public void exceptionShouldBeThrownWhenBookHashMapDoesNotContainBook(){
+    public void exceptionShouldBeThrownWhenBookHashMapDoesNotContainBook() throws Exception {
         expectedBookProps.put("Category", "Music");
 
         parser.parseBook(expectedBookProps);
@@ -279,7 +279,7 @@ public class ParserTest {
      * when passed hashmap does not contain Music.
      * */
     @Test (expected = Exception.class)
-    public void exceptionShouldBeThrownWhenMusicHashMapDoesNotContainMusic(){
+    public void exceptionShouldBeThrownWhenMusicHashMapDoesNotContainMusic() throws Exception {
         expectedMusicProps.put("Category", "Movie");
 
         parser.parseMusic(expectedMusicProps);

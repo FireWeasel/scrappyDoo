@@ -22,7 +22,7 @@ public class Parser {
      * @param elements - object to be parsed
      * @return parsed item
      */
-    public Item parse(Elements elements) {
+    public Item parse(Elements elements) throws Exception {
         if(elements != null) {
             String type = "";
             HashMap<String, String> item = new HashMap<>();
@@ -61,17 +61,20 @@ public class Parser {
      * @param movie - string to be parsed
      * @return parsed movie
      */
-    public Movie parseMovie(HashMap<String, String> movie) {
-        String genre = movie.get("Genre");
-        String format = movie.get("Format");
-        String title = movie.get("Title");
-        int year = Integer.valueOf(movie.get("Year"));
-        String director = movie.get("Director");
-        List<String> writers = Arrays.stream(movie.get("Writers").split(",")).map(String::trim).collect(Collectors.toList());
-        List<String> stars = Arrays.stream(movie.get("Stars").split(",")).map(String::trim).collect(Collectors.toList());
+    public Movie parseMovie(HashMap<String, String> movie) throws Exception {
+        if(movie.get("Category").equals("Movie")) {
+            String genre = movie.get("Genre");
+            String format = movie.get("Format");
+            String title = movie.get("Title");
+            int year = Integer.valueOf(movie.get("Year"));
+            String director = movie.get("Director");
+            List<String> writers = Arrays.stream(movie.get("Writers").split(",")).map(String::trim).collect(Collectors.toList());
+            List<String> stars = Arrays.stream(movie.get("Stars").split(",")).map(String::trim).collect(Collectors.toList());
 
-        Movie returnMovie = new Movie(title, director, genre, format,year, writers, stars);
-        return returnMovie;
+            Movie returnMovie = new Movie(title, director, genre, format, year, writers, stars);
+            return returnMovie;
+        }
+        else throw new Exception("This hashmap does not contain a Movie item!");
     }
 
     /**
@@ -79,17 +82,20 @@ public class Parser {
      * @param book - string to be parsed
      * @return parsed book
      */
-    public Book parseBook(HashMap<String, String> book) {
-        String genre = book.get("Genre");
-        String format = book.get("Format");
-        String title = book.get("Title");
-        int year = Integer.valueOf(book.get("Year"));
-        String publisher = book.get("Publisher");
-        String isbn = book.get("ISBN");
-        List<String> authors = Arrays.stream(book.get("Authors").split(",")).map(String::trim).collect(Collectors.toList());
+    public Book parseBook(HashMap<String, String> book) throws Exception {
+        if(book.get("Category").equals("Book")) {
+            String genre = book.get("Genre");
+            String format = book.get("Format");
+            String title = book.get("Title");
+            int year = Integer.valueOf(book.get("Year"));
+            String publisher = book.get("Publisher");
+            String isbn = book.get("ISBN");
+            List<String> authors = Arrays.stream(book.get("Authors").split(",")).map(String::trim).collect(Collectors.toList());
 
-        Book returnBook = new Book(genre, format, year, title, authors, publisher, isbn);
-        return returnBook;
+            Book returnBook = new Book(genre, format, year, title, authors, publisher, isbn);
+            return returnBook;
+        }
+        else throw new Exception("This hashmap does not contain a Book item");
     }
 
     /**
@@ -97,14 +103,17 @@ public class Parser {
      * @param music - string to be parsed
      * @return parsed music
      */
-    public Music parseMusic(HashMap<String, String> music) {
-        String title = music.get("Title");
-        String format = music.get("Format");
-        String genre = music.get("Genre");
-        int year = Integer.valueOf(music.get("Year"));
-        String artist = music.get("Artist");
+    public Music parseMusic(HashMap<String, String> music) throws Exception {
+        if(music.get("Category").equals("Music")) {
+            String title = music.get("Title");
+            String format = music.get("Format");
+            String genre = music.get("Genre");
+            int year = Integer.valueOf(music.get("Year"));
+            String artist = music.get("Artist");
 
-        Music returnMusic = new Music(genre,format,year,title,artist);
-        return returnMusic;
+            Music returnMusic = new Music(genre, format, year, title, artist);
+            return returnMusic;
+        }
+        else throw new Exception("This hashmap does not contain a Music item");
     }
 }
