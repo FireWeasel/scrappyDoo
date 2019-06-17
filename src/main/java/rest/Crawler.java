@@ -1,9 +1,7 @@
 package rest;
 
-import model.Book;
 import model.Item;
 
-import javax.swing.text.Document;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +10,7 @@ import java.util.List;
  * @version 0.1
  */
 public class Crawler {
+    public Crawler(String domain){}
     /**
      * Domain to crawl
      */
@@ -36,7 +35,7 @@ public class Crawler {
      * Get all data from one crawled webpage
      * @return a list of all scraped data
      */
-    public List<Item> getAllData() {
+    public List<Item> getAllData(String baseUri) {
         return new ArrayList<>();
     }
 
@@ -46,7 +45,7 @@ public class Crawler {
      * @param keyword - filter by which to look for a specific item
      * @return single item of filtered scraped data
      */
-    public Item getSpecificData(String type, String keyword) {
+    public Item getSpecificData(String baseUri, String type, String keyword) {
         return null;
     }
 }
