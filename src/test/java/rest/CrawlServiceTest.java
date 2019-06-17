@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import model.Item;
 import model.Movie;
 import model.Music;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -184,7 +185,21 @@ public class CrawlServiceTest {
      * there is no crawled/scraped item.
      */
     @Test
-    public void emptyResponseIsReturnedWhenThereIsNoItem(){}
+    public void emptyResponseIsReturnedWhenThereIsNoItem() throws Exception {
+        String type = "type";
+        String keyword = "keyword";
+
+        PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
+        when(crawlMock.getSpecificData(baseUri, type, keyword)).thenReturn(null);
+
+        Response response = crawlService.findData(baseUri, type, keyword);
+
+        JsonReader jsonReader = Json.createReader(new StringReader(response.getEntity().toString()));
+        JsonObject returnedJsonResponse = jsonReader.readObject();
+        jsonReader.close();
+
+        Assert.assertEquals("{}", returnedJsonResponse.get("result").toString());
+    }
     /**
      * Test function that asserts
      * if an empty response is returned when
