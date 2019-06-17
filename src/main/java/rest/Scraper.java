@@ -2,6 +2,8 @@ package rest;
 
 import model.Item;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,5 +35,9 @@ public class Scraper {
      */
     public List<Item> scrapeData(Document htmlContent) {
         return new ArrayList<>();
+    }
+
+    public ArrayList<String> getAllLinks(Document page) {
+        return null;
     }
 }
