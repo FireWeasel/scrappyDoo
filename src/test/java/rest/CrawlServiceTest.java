@@ -236,7 +236,17 @@ public class CrawlServiceTest {
      * there is no last Crawled Action.
      */
     @Test
-    public void emptyResponseIsReturnedWhenThereIsNoLastCrawlAction(){}
+    public void emptyResponseIsReturnedWhenThereIsNoLastCrawlAction() {
+        Gson gson = new GsonBuilder().create();
+
+        Response response = crawlService.getLastCrawlingAction();
+
+        JsonReader jsonReader = Json.createReader(new StringReader(response.getEntity().toString()));
+        JsonObject returnedJsonResponse = jsonReader.readObject();
+        jsonReader.close();
+
+        Assert.assertEquals(gson.toJson(new Object()), returnedJsonResponse.toString());
+    }
     /**
      * Test function that asserts
      * that an Item can be returned when
