@@ -4,17 +4,25 @@ import model.Book;
 import model.Item;
 import model.Movie;
 import model.Music;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.junit.Test;
 
 import org.jsoup.nodes.Document;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+@PrepareForTest(Jsoup.class)
+@RunWith(PowerMockRunner.class)
 public class ScraperTest {
     private static String INVALID_URL = "invalid.url.should.throw";
     private Parser mockParser = mock(Parser.class);
@@ -170,5 +178,21 @@ public class ScraperTest {
 
         //assert
         assertEquals("array of returned links should be empty if no links", 0, list.size());
+    }
+
+    /**
+     * Jsoup should make a connection to a website url inside of the getPage method
+     */
+    @Test
+    public void verifyJsoupConnectFunctionIsBeingCalledInsideGetPage() throws IOException {
+        PowerMockito.mockStatic(Jsoup.class);
+        Connection connection = mock(Connection.class);
+        String url = "http://google.com";
+        when(connection.get()).thenReturn(new Document(url));
+        when(Jsoup.connect(url)).thenReturn(connection);
+
+        scraper.getPage(url);
+
+        verify(Jsoup.connect(url)).get();
     }
 }
