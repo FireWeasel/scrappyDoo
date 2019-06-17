@@ -178,7 +178,23 @@ public class CrawlServiceTest {
      * there are no crawled/scraped items.
      */
     @Test
-    public void emptyResponseIsReturnedWhenThereAreNoItems(){}
+    public void emptyResponseIsReturnedWhenThereAreNoItems() throws Exception {
+        //arrange
+        PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
+        when(crawlMock.getAllData(baseUri)).thenReturn(null);
+
+        //act
+        Response response = crawlService.crawlWholeWebsite(baseUri);
+
+        //assert
+        JsonReader jsonReader = Json.createReader(new StringReader(response.getEntity().toString()));
+        JsonObject returnedJsonResponse = jsonReader.readObject();
+        jsonReader.close();
+
+        Assert.assertEquals("[]", returnedJsonResponse.get("music").toString());
+        Assert.assertEquals("[]", returnedJsonResponse.get("movies").toString());
+        Assert.assertEquals("[]", returnedJsonResponse.get("books").toString());
+    }
     /**
      * Test function that asserts
      * if an empty response is returned when
@@ -200,7 +216,7 @@ public class CrawlServiceTest {
         JsonReader jsonReader = Json.createReader(new StringReader(response.getEntity().toString()));
         JsonObject returnedJsonResponse = jsonReader.readObject();
         jsonReader.close();
-        
+
         Assert.assertEquals("\"{}\"", returnedJsonResponse.get("result").toString());
     }
     /**
