@@ -5,8 +5,6 @@ import model.Item;
 import model.Movie;
 import model.Music;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.junit.Test;
 
 import org.jsoup.nodes.Document;
@@ -18,6 +16,8 @@ import static org.mockito.Mockito.*;
 
 public class ScraperTest {
     private static String INVALID_URL = "invalid.url.should.throw";
+    private Parser mockParser = mock(Parser.class);
+    private Scraper scraperWithMock = new Scraper(mockParser);
     private Scraper scraper = new Scraper();
 
     /**
@@ -44,8 +44,6 @@ public class ScraperTest {
     @Test
     public void assertScrapedMovieIsNotNullWhenParsingValidHtmlContent() {
         //arrange
-        Parser mockParser = mock(Parser.class);
-        Scraper scraper = new Scraper(mockParser);
         String html = "<html><body><div class=\"div-media-details\">" +
                 "<h1>Forrest Gump</h1>" +
                 "<table><tbody>" +
@@ -66,7 +64,7 @@ public class ScraperTest {
         when(mockParser.parse(document.select("div.div-media-details"))).thenReturn(expected);
 
         //act
-        List<Item> list = scraper.scrapeData(document);
+        List<Item> list = scraperWithMock.scrapeData(document);
 
         //assert
         assertNotNull("return list should not be null", list);
@@ -80,8 +78,6 @@ public class ScraperTest {
     @Test
     public void assertScrapedBookIsNotNullWhenParsingValidHtmlContent() {
         //arrange
-        Parser mockParser = mock(Parser.class);
-        Scraper scraper = new Scraper(mockParser);
         String html = "<html><body><div class=\"div-media-details\">" +
                 "<h1>Clean Code: A Handbook of Agile Software Craftsmanship</h1>" +
                 "<table><tbody>" +
@@ -102,7 +98,7 @@ public class ScraperTest {
         when(mockParser.parse(document.select("div.div-media-details"))).thenReturn(expected);
 
         //act
-        List<Item> list = scraper.scrapeData(document);
+        List<Item> list = scraperWithMock.scrapeData(document);
 
         //assert
         assertNotNull("return list should not be null", list);
@@ -116,8 +112,6 @@ public class ScraperTest {
     @Test
     public void assertScrapedMusicIsNotNullWhenParsingValidHtmlContent() {
         //arrange
-        Parser mockParser = mock(Parser.class);
-        Scraper scraper = new Scraper(mockParser);
         String html = "<html><body><div class=\"div-media-details\">" +
                 "<h1>Beethoven: Complete Symphonies</h1>" +
                 "<table><tbody>" +
@@ -133,19 +127,11 @@ public class ScraperTest {
         when(mockParser.parse(document.select("div.div-media-details"))).thenReturn(expected);
 
         //act
-        List<Item> list = scraper.scrapeData(document);
+        List<Item> list = scraperWithMock.scrapeData(document);
 
         //assert
         assertNotNull("return list should not be null", list);
         assertEquals("return list should have length equals one", 1, list.size());
         assertSame("returned item should be the same", expected, list.get(0));
-    }
-
-    /**
-     * Jsoup should make a connection to a website url inside of the getPage method
-     */
-    @Test
-    public void verifyJsoupConnectFunctionIsBeingCalledInsideGetPage() {
-
     }
 }
