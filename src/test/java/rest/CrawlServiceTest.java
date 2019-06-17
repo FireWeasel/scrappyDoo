@@ -2,9 +2,12 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import model.Item;
 import model.Movie;
 import model.Music;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +16,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.json.Json;
-import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.ws.rs.core.Response;
 import java.io.StringReader;
@@ -83,10 +85,10 @@ public class CrawlServiceTest {
         Response response = crawlService.crawlWholeWebsite(baseUri);
 
         JsonReader jsonReader = Json.createReader(new StringReader(response.getEntity().toString()));
-        JsonObject returnedJsonResponse = jsonReader.readObject();
+        javax.json.JsonObject returnedJsonResponse = jsonReader.readObject();
         jsonReader.close();
 
-        JsonObject expectedResponseJson = Json.createObjectBuilder()
+        javax.json.JsonObject expectedResponseJson = Json.createObjectBuilder()
                 .add("id", 1)
                 .add("time", returnedJsonResponse.get("time")) //hardcoded since it cannot be calculated
                 .add("movies", moviesJson)
@@ -108,6 +110,23 @@ public class CrawlServiceTest {
         domain = "";
 
         crawlService.crawlWholeWebsite(baseUri);
+    }
+    /**
+     * Test function that asserts
+     * if an empty response is returned when
+     * there are no crawled/scraped items.
+     */
+    @Test
+    public void emptyResponseIsReturnedWhenThereAreNoItems() throws Exception {
+        PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
+        when(crawlMock.getAllData(baseUri)).thenReturn(new ArrayList<Item>());
+
+        Response response = crawlService.crawlWholeWebsite(baseUri);
+
+        String responseToString = response.getEntity().toString();
+        JsonObject jsonObject = new JsonParser().parse(responseToString).getAsJsonObject();
+
+        Assert.assertTrue(jsonObject.get("movies").getAsString().equals("[]"));
     }
 
     /**
@@ -132,13 +151,6 @@ public class CrawlServiceTest {
      */
     @Test
     public void assertIfResponseContainsItemWhenFindingData(){}
-    /**
-     * Test function that asserts
-     * if an empty response is returned when
-     * there are no crawled/scraped items.
-     */
-    @Test
-    public void emptyResponseIsReturnedWhenThereAreNoItems(){}
     /**
      * Test function that asserts
      * if an empty response is returned when
