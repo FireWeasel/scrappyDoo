@@ -20,11 +20,17 @@ public class CrawlAction {
     /**
      *  the time elapsed of the scraping
      */
-    public int timeElapsed;
+    public long timeElapsed;
 
     /**
      * the depth of the scraping
      */
     public int depth;
 
+    public CrawlAction(int nrOfPagesVisited, int nrOfUniquePagesVisited, long timeElapsed, int depth) {
+        this.nrOfPagesVisited = nrOfPagesVisited;
+        this.nrOfUniquePagesVisited = nrOfUniquePagesVisited;
+        this.timeElapsed = timeElapsed;
+        this.depth = depth;
+    }
 }

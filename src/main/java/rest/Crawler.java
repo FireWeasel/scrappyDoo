@@ -16,10 +16,18 @@ public class Crawler {
      */
     public String domain;
 
+    public ArrayList<String> getVisitedLinks() {
+        return visitedLinks;
+    }
+
+    public Integer getDepth() {
+        return depth;
+    }
+
     /**
      * Array of previously visited links
      */
-    public ArrayList<String> visitedLinks;
+    public ArrayList<String> visitedLinks = new ArrayList<>();
 
     /**
      * The depth of crawling the crawler reached

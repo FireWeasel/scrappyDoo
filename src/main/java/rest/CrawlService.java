@@ -28,7 +28,7 @@ public class CrawlService {
     /**
      * Last crawl actions executed
      */
-    public List<CrawlAction> lastActions;
+    public List<CrawlAction> lastActions = new ArrayList<>();
 
     /**
      * Object used for crawling a website and scraping web pages
@@ -75,6 +75,13 @@ public class CrawlService {
                 booksJson = gson.toJson(new ArrayList<>());
                 musicJson = gson.toJson(new ArrayList<>());
             }
+            List<String> deduplicated = new ArrayList<>();
+            for (String link : crawler.getVisitedLinks()) {
+                if (!deduplicated.contains(link)) {
+                    deduplicated.add(link);
+                }
+            }
+            lastActions.add(new CrawlAction(crawler.getVisitedLinks().size(), deduplicated.size(), duration, crawler.getDepth()));
 
             JsonObject expectedResponseJson = Json.createObjectBuilder()
                     .add("id", this.id)
@@ -115,6 +122,13 @@ public class CrawlService {
             } else {
                 itemJson = gson.toJson(new Object());
             }
+            List<String> deduplicated = new ArrayList<>();
+            for (String link : crawler.getVisitedLinks()) {
+                if (!deduplicated.contains(link)) {
+                    deduplicated.add(link);
+                }
+            }
+            lastActions.add(new CrawlAction(crawler.getVisitedLinks().size(), deduplicated.size(), duration, crawler.getDepth()));
 
             JsonObject expectedResponseJson = Json.createObjectBuilder()
                     .add("id", this.id)
