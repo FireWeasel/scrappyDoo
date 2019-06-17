@@ -71,7 +71,7 @@ public class Scraper {
         ArrayList<Item> list = new ArrayList<>();
         Elements elements = htmlContent.select("div.div-media-details");
         if (elements.size() == 0) {
-            throw new IllegalArgumentException("no elements found");
+            return null;
         }
         Item parsed = parser.parse(elements);
         list.add(parsed);
