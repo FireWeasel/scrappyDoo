@@ -191,9 +191,9 @@ public class CrawlServiceTest {
         JsonObject returnedJsonResponse = jsonReader.readObject();
         jsonReader.close();
 
-        Assert.assertEquals("[]", returnedJsonResponse.get("music").toString());
-        Assert.assertEquals("[]", returnedJsonResponse.get("movies").toString());
-        Assert.assertEquals("[]", returnedJsonResponse.get("books").toString());
+        Assert.assertEquals("\"[]\"", returnedJsonResponse.get("music").toString());
+        Assert.assertEquals("\"[]\"", returnedJsonResponse.get("movies").toString());
+        Assert.assertEquals("\"[]\"", returnedJsonResponse.get("books").toString());
     }
     /**
      * Test function that asserts
