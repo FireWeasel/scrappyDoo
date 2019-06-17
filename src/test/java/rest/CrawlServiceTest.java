@@ -263,6 +263,15 @@ public class CrawlServiceTest {
      * Exception is thrown when an invalid type
      * is passed.
      */
-    @Test
-    public void exceptionIsThrownWhenTypeIsEmpty(){}
+    @Test(expected = IllegalArgumentException.class)
+    public void exceptionIsThrownWhenTypeIsEmpty() throws Exception {
+        //arrange
+        String type = "";
+        String keyword = "keyword";
+
+        PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
+
+        //act
+        crawlService.findData(baseUri, type, keyword);
+    }
 }
