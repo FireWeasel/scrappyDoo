@@ -144,6 +144,7 @@ public class CrawlServiceTest {
      */
     @Test
     public void assertIfResponseContainsItemWhenFindingData() throws Exception {
+        //arrange
         Gson gson = new GsonBuilder().create();
         Item movie = expectedListOfItems.get(0);
 
@@ -154,8 +155,10 @@ public class CrawlServiceTest {
         String keyword = "keyword";
         when(crawlMock.getSpecificData(baseUri, type, keyword)).thenReturn(expectedListOfItems.get(0));
 
+        //act
         Response response = crawlService.findData(baseUri, type, keyword);
 
+        //assert
         JsonReader jsonReader = Json.createReader(new StringReader(response.getEntity().toString()));
         JsonObject returnedJsonResponse = jsonReader.readObject();
         jsonReader.close();
