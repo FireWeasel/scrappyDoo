@@ -60,7 +60,7 @@ public class ScraperTest {
      * Parsed movie is not null when being fed valid html content with one movie object
      */
     @Test
-    public void assertScrapedMovieIsNotNullWhenParsingValidHtmlContent() {
+    public void assertScrapedMovieIsNotNullWhenParsingValidHtmlContent() throws Exception {
         //arrange
         String html = "<html><body><div class=\"div-media-details\">" +
                 "<h1>Forrest Gump</h1>" +
@@ -75,9 +75,16 @@ public class ScraperTest {
                 "</tbody></table>" +
                 "</div></body></html>";
         Document document = Jsoup.parse(html);
+        List<String> writers = new ArrayList<>();
+        List<String> stars = new ArrayList<>();
+        writers.add("Winston Groom");
+        writers.add("Eric Roth");
+        stars.add("Tom Hanks");
+        stars.add("Rebecca Williams");
+        stars.add("Sally Field");
+        stars.add("Michael Conner Humphreys");
         Movie expected = new Movie(
-                "Forrest Gump", "Drama", "DVD", 1994, "Robert Zemeckis", "Winston Groom, Eric Roth",
-                "Tom Hanks, Rebecca Williams, Sally Field, Michael Conner Humphreys"
+                "Forrest Gump", "Robert Zemeckis", "Drama", "DVD", 1994,  writers, stars
         );
         when(mockParser.parse(document.select("div.div-media-details"))).thenReturn(expected);
 
@@ -94,7 +101,7 @@ public class ScraperTest {
      * Parsed book is not null when being fed valid html content with one book object
      */
     @Test
-    public void assertScrapedBookIsNotNullWhenParsingValidHtmlContent() {
+    public void assertScrapedBookIsNotNullWhenParsingValidHtmlContent() throws Exception {
         //arrange
         String html = "<html><body><div class=\"div-media-details\">" +
                 "<h1>Clean Code: A Handbook of Agile Software Craftsmanship</h1>" +
@@ -109,8 +116,10 @@ public class ScraperTest {
                 "</tbody></table>" +
                 "</div></body></html>";
         Document document = Jsoup.parse(html);
+        List<String> authors = new ArrayList<>();
+        authors.add("Robert C. Martin");
         Book expected = new Book(
-                "Clean Code: A Handbook of Agile Software Craftsmanship", "Tech", "Ebook", 2008, "Robert C. Martin",
+                "Tech",  "Ebook",2008, "Clean Code: A Handbook of Agile Software Craftsmanship", authors,
                 "Prentice Hall", "978-0132350884"
         );
         when(mockParser.parse(document.select("div.div-media-details"))).thenReturn(expected);
@@ -128,7 +137,7 @@ public class ScraperTest {
      * Parsed music is not null when being fed valid html content with one music object
      */
     @Test
-    public void assertScrapedMusicIsNotNullWhenParsingValidHtmlContent() {
+    public void assertScrapedMusicIsNotNullWhenParsingValidHtmlContent() throws Exception {
         //arrange
         String html = "<html><body><div class=\"div-media-details\">" +
                 "<h1>Beethoven: Complete Symphonies</h1>" +
@@ -141,7 +150,7 @@ public class ScraperTest {
                 "</tbody></table>" +
                 "</div></body></html>";
         Document document = Jsoup.parse(html);
-        Music expected = new Music("Beethoven: Complete Symphonies", "Classical", "CD", 2012, "Ludwig van Beethoven");
+        Music expected = new Music("Classical", "CD", 2012, "Beethoven: Complete Symphonies", "Ludwig van Beethoven");
         when(mockParser.parse(document.select("div.div-media-details"))).thenReturn(expected);
 
         //act

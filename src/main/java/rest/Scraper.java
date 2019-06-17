@@ -73,8 +73,13 @@ public class Scraper {
         if (elements.size() == 0) {
             return null;
         }
-        Item parsed = parser.parse(elements);
-        list.add(parsed);
-        return list;
+        try {
+
+            Item parsed = parser.parse(elements);
+            list.add(parsed);
+            return list;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

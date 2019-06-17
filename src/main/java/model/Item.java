@@ -37,12 +37,6 @@ public abstract class Item {
      */
     private int Year;
 
-    /**
-     * Field containing information about
-     * the title of the item.
-     */
-    private String Title;
-
     public String getGenre() {
         return Genre;
     }
