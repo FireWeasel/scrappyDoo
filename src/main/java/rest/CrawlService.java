@@ -12,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,13 +58,23 @@ public class CrawlService {
             long duration = (end - start) / 1000000;
 
             Gson gson = new GsonBuilder().create();
-            List<Item> movies = items.stream().filter(i -> i instanceof Movie).collect(Collectors.toList());
-            List<Item> books = items.stream().filter(i -> i instanceof Book).collect(Collectors.toList());
-            List<Item> music = items.stream().filter(i -> i instanceof Music).collect(Collectors.toList());
+            String moviesJson;
+            String booksJson;
+            String musicJson;
+            if (items != null) {
 
-            String moviesJson = gson.toJson(movies);
-            String booksJson = gson.toJson(books);
-            String musicJson = gson.toJson(music);
+                List<Item> movies = items.stream().filter(i -> i instanceof Movie).collect(Collectors.toList());
+                List<Item> books = items.stream().filter(i -> i instanceof Book).collect(Collectors.toList());
+                List<Item> music = items.stream().filter(i -> i instanceof Music).collect(Collectors.toList());
+
+                moviesJson = gson.toJson(movies);
+                booksJson = gson.toJson(books);
+                musicJson = gson.toJson(music);
+            } else {
+                moviesJson = gson.toJson(new ArrayList<>());
+                booksJson = gson.toJson(new ArrayList<>());
+                musicJson = gson.toJson(new ArrayList<>());
+            }
 
             JsonObject expectedResponseJson = Json.createObjectBuilder()
                     .add("id", this.id)
