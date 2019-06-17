@@ -17,10 +17,30 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    // https://mvnrepository.com/artifact/javax.json/javax.json-api
+    compile group: 'javax.json', name: 'javax.json-api', version: '1.0'
+    // https://mvnrepository.com/artifact/org.glassfish/javax.json
+    compile group: 'org.glassfish', name: 'javax.json', version: '1.1.4'
+    // https://mvnrepository.com/artifact/org.hamcrest/java-hamcrest
+    testCompile group: 'org.hamcrest', name: 'java-hamcrest', version: '2.0.0.0'
+    // https://mvnrepository.com/artifact/pl.pragmatists/JUnitParams
+    testCompile group: 'pl.pragmatists', name: 'JUnitParams', version: '1.1.1'
+    // https://mvnrepository.com/artifact/org.skyscreamer/jsonassert
+    testCompile group: 'org.skyscreamer', name: 'jsonassert', version: '1.5.0'
     // https://mvnrepository.com/artifact/org.jsoup/jsoup
-    compile group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
-    // for mocking
-    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.23.0'
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
+
+    testCompile 'org.mockito:mockito-core:2.8.0'
+    testCompile 'org.powermock:powermock-api-mockito2:1.7.0RC2'
+    testCompile 'org.powermock:powermock-module-junit4:1.7.0'
+    testCompile 'org.powermock:powermock-core:1.7.0'
+    testCompile 'org.powermock:powermock-module-junit4-rule:1.7.0'
+
+    compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet', version: '2.27'
+    compile group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '2.27'
+    compile group: 'org.glassfish.jersey.bundles.repackaged', name: 'jersey-guava', version: '2.26-b03'
+    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.4.0-b180830.0359'
+
 }
 
 jacocoTestReport {
