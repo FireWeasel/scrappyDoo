@@ -21,4 +21,11 @@ public class Movie extends Item {
      * participating in the movie.
      */
     public int Stars;
+
+    public Movie(String title, String genre, String format, int year, String director, String writers, int stars) {
+        super(title, genre, format, year);
+        Director = director;
+        Writers = writers;
+        Stars = stars;
+    }
 }

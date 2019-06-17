@@ -9,6 +9,11 @@ package model;
 public abstract class Item {
     /**
      * Field containing information about
+     * the title of the item.
+     */
+    public String Title;
+    /**
+     * Field containing information about
      * the genre of the item.
      */
     public String Genre;
@@ -22,4 +27,11 @@ public abstract class Item {
      * the year of creation of the item.
      */
     public int Year;
+
+    public Item(String title, String genre, String format, int year) {
+        Title = title;
+        Genre = genre;
+        Format = format;
+        Year = year;
+    }
 }
