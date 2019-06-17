@@ -136,7 +136,15 @@ public class CrawlServiceTest {
      * CrawlService after each of its function calls.
      */
     @Test
-    public void verifyCrawlActionIsAddedToLastActionsWhenEachEndpointIsCalled(){}
+    public void verifyCrawlActionIsAddedToLastActionsWhenEachEndpointIsCalled() throws Exception {
+        PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
+        when(crawlMock.getVisitedLinks()).thenReturn(new ArrayList<>());
+
+        crawlService.crawlWholeWebsite(baseUri);
+        crawlService.findData(baseUri, "type", "keyword");
+
+        Assert.assertEquals(2, crawlService.lastActions.size());
+    }
     /**
      * Test function that asserts
      * if Response returned by findData endpoint
