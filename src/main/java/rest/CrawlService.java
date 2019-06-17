@@ -148,6 +148,10 @@ public class CrawlService {
     @Path("lastaction")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getLastCrawlingAction() {
+        if (lastActions.size() == 0) {
+            JsonObject jsonResponse = Json.createObjectBuilder().build();
+            return Response.status(200).entity(jsonResponse).type(MediaType.APPLICATION_JSON).build();
+        }
         return null;
     }
 }
