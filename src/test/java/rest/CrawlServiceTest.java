@@ -254,7 +254,33 @@ public class CrawlServiceTest {
      * findData endpoint.
      */
     @Test
-    public void emptyKeywordsArePassedForFindDataAndItemIsReturned(){}
+    public void emptyKeywordsArePassedForFindDataAndItemIsReturned() throws Exception {
+        //arrange
+        Gson gson = new GsonBuilder().create();
+        Item movie = expectedListOfItems.get(0);
+
+        String movieJson = gson.toJson(movie);
+
+        PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
+        String keyword = "";
+        when(crawlMock.getSpecificData(baseUri, type, keyword)).thenReturn(expectedListOfItems.get(0));
+
+        //act
+        Response response = crawlService.findData(baseUri, type, keyword);
+
+        //assert
+        JsonReader jsonReader = Json.createReader(new StringReader(response.getEntity().toString()));
+        JsonObject returnedJsonResponse = jsonReader.readObject();
+        jsonReader.close();
+
+        JsonObject expectedResponseJson = Json.createObjectBuilder()
+                .add("id", 1)
+                .add("time", returnedJsonResponse.get("time")) //hardcoded since it cannot be calculated
+                .add("result", movieJson)
+                .build();
+
+        assertThat(expectedResponseJson, equalTo(returnedJsonResponse));
+    }
     /**
      * Test function that checks if an
      * Exception is thrown when an invalid type
