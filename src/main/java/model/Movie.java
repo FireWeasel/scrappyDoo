@@ -9,6 +9,7 @@ import java.util.Objects;
  * custom Artist property.
  */
 public class Movie extends Item {
+    public Movie(){}
     public Movie(String Title, String Director, String Genre, String Format, int Year, List<String> Writers, List<String> Stars){
         super(Genre, Format, Year, Title);
         if(Director == null) throw new IllegalArgumentException("Director, writers and stars must not be null.");

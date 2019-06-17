@@ -38,6 +38,9 @@ public abstract class Item {
      */
     private String Title;
 
+    protected Item() {
+    }
+
     public String getGenre() {
         return Genre;
     }

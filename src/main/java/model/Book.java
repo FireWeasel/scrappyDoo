@@ -8,6 +8,8 @@ import java.util.Objects;
  * @version 0.1
  */
 public class Book extends Item {
+    public Book(){
+    }
     public Book(String genre, String format, int year, String title, List<String> authors, String publisher, String isbn) {
         super(genre, format, year, title);
         if(publisher == null || isbn == null) throw new IllegalArgumentException("Publisher and ISBN should not be null");
