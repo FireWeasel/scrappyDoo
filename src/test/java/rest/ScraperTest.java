@@ -138,6 +138,7 @@ public class ScraperTest {
 
     @Test
     public void getAllLinksShouldReturnAllTheLinksFromAWebPage() {
+        //arrange
         String html = "<html><body>" +
                 "<a href=\"http://google.com\">To Google</a>" +
                 "<a href=\"http://twitter.com\">To Twitter</a>" +
@@ -147,8 +148,10 @@ public class ScraperTest {
         expected.add("http://google.com");
         expected.add("http://twitter.com");
 
+        //act
         ArrayList<String> list = scraper.getAllLinks(document);
 
+        //assert
         assertEquals("array of returned links should have the same size", expected.size(), list.size());
         assertEquals("array of returned links should match", expected.get(0), list.get(0));
         assertEquals("array of returned links should match", expected.get(1), list.get(1));
@@ -156,13 +159,16 @@ public class ScraperTest {
 
     @Test
     public void getAllLinksShouldReturnEmptyArrayIfNoLinksFound() {
+        //arrange
         String html = "<html><body>" +
                 "<p>text</p>" +
                 "</body></html>";
         Document document = Jsoup.parse(html);
 
+        //act
         ArrayList<String> list = scraper.getAllLinks(document);
 
+        //assert
         assertEquals("array of returned links should be empty if no links", 0, list.size());
     }
 }
