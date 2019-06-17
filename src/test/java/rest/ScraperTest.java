@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import org.jsoup.nodes.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -133,5 +134,35 @@ public class ScraperTest {
         assertNotNull("return list should not be null", list);
         assertEquals("return list should have length equals one", 1, list.size());
         assertSame("returned item should be the same", expected, list.get(0));
+    }
+
+    @Test
+    public void getAllLinksShouldReturnAllTheLinksFromAWebPage() {
+        String html = "<html><body>" +
+                "<a href=\"http://google.com\">To Google</a>" +
+                "<a href=\"http://twitter.com\">To Twitter</a>" +
+                "</body></html>";
+        Document document = Jsoup.parse(html);
+        ArrayList<String> expected = new ArrayList<>();
+        expected.add("http://google.com");
+        expected.add("http://twitter.com");
+
+        ArrayList<String> list = scraper.getAllLinks(document);
+
+        assertEquals("array of returned links should have the same size", expected.size(), list.size());
+        assertEquals("array of returned links should match", expected.get(0), list.get(0));
+        assertEquals("array of returned links should match", expected.get(1), list.get(1));
+    }
+
+    @Test
+    public void getAllLinksShouldReturnEmptyArrayIfNoLinksFound() {
+        String html = "<html><body>" +
+                "<p>text</p>" +
+                "</body></html>";
+        Document document = Jsoup.parse(html);
+
+        ArrayList<String> list = scraper.getAllLinks(document);
+
+        assertEquals("array of returned links should be empty if no links", 0, list.size());
     }
 }
