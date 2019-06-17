@@ -107,6 +107,9 @@ public class CrawlService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response findData(String baseUrl, String type, String keyword) throws Exception {
         if (baseUrl.startsWith("http://")) {
+            if (!(type.equals("Music") || type.equals("Movie") || type.equals("Books"))) {
+                throw new IllegalArgumentException("invalid type");
+            }
             long start = System.nanoTime();
             String domain = baseUrl.split("nl/")[0];
             Crawler crawler = new Crawler(domain + "nl");
