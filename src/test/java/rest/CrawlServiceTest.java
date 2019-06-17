@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
@@ -116,7 +117,19 @@ public class CrawlServiceTest {
      * findData endpoint.
      */
     @Test
-    public void verifyGetSpecificDataOfCrawlerWhenFindingData(){}
+    public void verifyGetSpecificDataOfCrawlerWhenFindingData() throws Exception {
+        //ARRANGE
+        PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
+        String type = any(String.class);
+        String keyword = any(String.class);
+
+        //ACT
+        crawlService.findData(baseUri, type, keyword);
+
+        //ASSERT
+        PowerMockito.verifyNew(Crawler.class).withArguments(domain);
+        verify(crawlMock, atLeastOnce()).getSpecificData(baseUri, type, keyword);
+    }
     /**
      * Test function that verifies
      * if a CrawlAction object is created and stored within
