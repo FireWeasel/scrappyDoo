@@ -79,7 +79,7 @@ public class CrawlService {
 
     /**
      * Find data in website
-     * @param baseUrl webiste to find data in
+     * @param baseUrl website to find data in
      * @param type - type of website
      * @param keyword - filter by which to look for a specific item
      * @return a JSON response containing scraped data or empty string
@@ -87,8 +87,27 @@ public class CrawlService {
     @GET
     @Path("finddata")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findData(String baseUrl, String type, String keyword) {
-        return  null;
+    public Response findData(String baseUrl, String type, String keyword) throws Exception {
+        if (baseUrl.startsWith("http://")) {
+            long start = System.nanoTime();
+            String domain = baseUrl.split("nl/")[0];
+            Crawler crawler = new Crawler(domain + "nl");
+            Item item = crawler.getSpecificData(baseUrl, type, keyword);
+
+            long end = System.nanoTime();
+            long duration = (end - start) / 1000000;
+
+            Gson gson = new GsonBuilder().create();
+            String itemJson = gson.toJson(item);
+
+            JsonObject expectedResponseJson = Json.createObjectBuilder()
+                    .add("id", this.id)
+                    .add("time", Long.toString(duration))
+                    .add("result", itemJson)
+                    .build();
+            return Response.status(200).entity(expectedResponseJson).type(MediaType.APPLICATION_JSON).build();
+        }
+        throw new Exception("Url needs to valid in order to crawl");
     }
 
     /**
