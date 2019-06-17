@@ -98,7 +98,12 @@ public class CrawlService {
             long duration = (end - start) / 1000000;
 
             Gson gson = new GsonBuilder().create();
-            String itemJson = gson.toJson(item);
+            String itemJson;
+            if (item != null) {
+                itemJson = gson.toJson(item);
+            } else {
+                itemJson = gson.toJson(new Object());
+            }
 
             JsonObject expectedResponseJson = Json.createObjectBuilder()
                     .add("id", this.id)
