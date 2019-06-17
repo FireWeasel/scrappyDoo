@@ -108,7 +108,8 @@ public class Crawler {
                             if(type != null) {
                                 if(keyword != null) {
                                     if (type.toLowerCase().equals("book")) {
-                                        if (scrapedItem.Genre.contains(keyword) || ((Book) scrapedItem).publisher.contains(keyword)) {
+                                        if (((Book) scrapedItem).Genre.contains(keyword) || ((Book) scrapedItem).publisher.contains(keyword)
+                                                || ((Book) scrapedItem).authors.contains(keyword)) {
                                             return scrapedItem;
                                         }
                                     }
@@ -118,7 +119,8 @@ public class Crawler {
                                     }
                                 }
                             } else if(keyword != null) {
-                                if (scrapedItem.Genre.contains(keyword) || ((Book) scrapedItem).publisher.contains(keyword)) {
+                                if (((Book) scrapedItem).Genre.contains(keyword) || ((Book) scrapedItem).publisher.contains(keyword)
+                                        || ((Book) scrapedItem).authors.contains(keyword)) {
                                     return scrapedItem;
                                 }
                             } else {
@@ -128,7 +130,7 @@ public class Crawler {
                             if(type != null) {
                                 if(keyword != null) {
                                     if (type.toLowerCase().equals("music")) {
-                                        if (scrapedItem.Genre.contains(keyword) || ((Music) scrapedItem).Artist.contains(keyword)) {
+                                        if (((Music) scrapedItem).Genre.contains(keyword) || ((Music) scrapedItem).Artist.contains(keyword)) {
                                             return scrapedItem;
                                         }
                                     }
@@ -138,7 +140,7 @@ public class Crawler {
                                     }
                                 }
                             } else if(keyword != null) {
-                                if (scrapedItem.Genre.contains(keyword) || ((Music) scrapedItem).Artist.contains(keyword)) {
+                                if (((Music) scrapedItem).Genre.contains(keyword) || ((Music) scrapedItem).Artist.contains(keyword)) {
                                     return scrapedItem;
                                 }
                             } else {
@@ -148,7 +150,7 @@ public class Crawler {
                             if(type != null) {
                                 if(keyword != null) {
                                     if (type.toLowerCase().equals("movie")) {
-                                        if (scrapedItem.Genre.contains(keyword) || ((Movie) scrapedItem).Director.contains(keyword)
+                                        if (((Movie) scrapedItem).Genre.contains(keyword) || ((Movie) scrapedItem).Director.contains(keyword)
                                                 || ((Movie) scrapedItem).Writers.contains(keyword)) {
                                             return scrapedItem;
                                         }
@@ -159,7 +161,7 @@ public class Crawler {
                                     }
                                 }
                             } else if(keyword != null) {
-                                if (scrapedItem.Genre.contains(keyword) || ((Movie) scrapedItem).Director.contains(keyword)
+                                if (((Movie) scrapedItem).Genre.contains(keyword) || ((Movie) scrapedItem).Director.contains(keyword)
                                         || ((Movie) scrapedItem).Writers.contains(keyword)) {
                                     return scrapedItem;
                                 }
