@@ -31,7 +31,7 @@ public class CrawlerTest {
      */
     @Test
     public void verifyJsoupObjectIsBeingCreatedWhenGetAllDataIsCalled() throws Exception {
-        Crawler crawler = new Crawler();
+        Crawler crawler = new Crawler("google.com");
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
         when(scraper.scrapeData("")).thenReturn(items);
@@ -52,7 +52,7 @@ public class CrawlerTest {
      */
     @Test
     public void verifyScraperObjectIsBeingCreatedWhenGetAllDataIsCalled() throws Exception {
-        Crawler crawler = new Crawler();
+        Crawler crawler = new Crawler("google.com");
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
         String url = "http://google.com";
@@ -69,7 +69,7 @@ public class CrawlerTest {
      */
     @Test
     public void assertIfReturnTypeIsListOfItemsWhenGetAllDataIsCalled() throws Exception {
-        Crawler crawler = new Crawler();
+        Crawler crawler = new Crawler("google.com");
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
         String url = "http://google.com";
@@ -87,7 +87,7 @@ public class CrawlerTest {
      */
     @Test
     public void verifyItemIsBeingAddedToTheListOfAllFoundItemsWhenGetAllDataIsCalled() throws Exception {
-        Crawler crawler = new Crawler();
+        Crawler crawler = new Crawler("google.com");
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
         ArrayList<String> links = new ArrayList<String>();
@@ -109,12 +109,38 @@ public class CrawlerTest {
     }
 
     /**
+     * Verifies if a link does not belong to the domain it does not craw and scrape it.
+     */
+    @Test
+    public void verifyItDoesNotCollectAnythingWhenLinkDoesNotBelongToDomainWhenGetAllDataIsCalled() throws Exception {
+        Crawler crawler = new Crawler("baidu.com");
+        Scraper scraper = mock(Scraper.class);
+        List<Item> items = new ArrayList<Item>();
+        ArrayList<String> links = new ArrayList<String>();
+        String url = "http://google.com";
+        Document doc = new Document(url);
+        items.add(new Book());
+        items.add(new Movie());
+        PowerMockito.mockStatic(Jsoup.class);
+        Connection connection = mock(Connection.class);
+        when(connection.get()).thenReturn(doc);
+        when(Jsoup.connect(url)).thenReturn(connection);
+        when(scraper.getAllLinks(doc)).thenReturn(links);
+        when(scraper.scrapeData(doc.outerHtml())).thenReturn(items);
+        PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
+
+        List<Item> actualResult = crawler.getAllData(url);
+
+        Assert.assertEquals(new ArrayList<Item>(), actualResult);
+    }
+
+    /**
      * Verifies if an empty list of type List<Item> has been returned if no matches were found
      * when GetAllData() is being called.
      */
     @Test
     public void verifyIfAnEmptyListOfItemsIsReturnedWhenNoItemsAreFoundWhenGetAllDataIsCalled() throws Exception {
-        Crawler crawler = new Crawler();
+        Crawler crawler = new Crawler("google.com");
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
         String url = "http://google.com";
@@ -141,7 +167,7 @@ public class CrawlerTest {
      */
     @Test
     public void verifyIfExceptionIsThrownFromScraperCrawlingIsNotInterruptedWhenGetAllDataIsCalled() throws Exception {
-        Crawler crawler = new Crawler();
+        Crawler crawler = new Crawler("google.com");
         Scraper scraper = mock(Scraper.class);
         String url = "http://google.com";
         when(scraper.scrapeData(url)).thenThrow(IllegalArgumentException.class);
@@ -283,7 +309,7 @@ public class CrawlerTest {
      */
     @Test(expected = Error.class)
     public void exceptionIsThrownWhenTheBaseUrlIsNotFoundWhenGetAllDataIsCalled() throws Exception {
-        Crawler crawler = new Crawler();
+        Crawler crawler = new Crawler("google.com");
         Scraper scraper = mock(Scraper.class);
         when(scraper.getPage("invalid.url")).thenThrow(Error.class);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
