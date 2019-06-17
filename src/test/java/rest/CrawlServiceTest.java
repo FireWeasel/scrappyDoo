@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
@@ -120,8 +119,8 @@ public class CrawlServiceTest {
     public void verifyGetSpecificDataOfCrawlerWhenFindingData() throws Exception {
         //ARRANGE
         PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
-        String type = any(String.class);
-        String keyword = any(String.class);
+        String type = "type";
+        String keyword = "keyword";
 
         //ACT
         crawlService.findData(baseUri, type, keyword);
