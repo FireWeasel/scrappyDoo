@@ -143,7 +143,31 @@ public class CrawlServiceTest {
      * (parameterized test).
      */
     @Test
-    public void assertIfResponseContainsItemWhenFindingData(){}
+    public void assertIfResponseContainsItemWhenFindingData() throws Exception {
+        Gson gson = new GsonBuilder().create();
+        Item movie = expectedListOfItems.get(0);
+
+        String movieJson = gson.toJson(movie);
+
+        PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
+        String type = "type";
+        String keyword = "keyword";
+        when(crawlMock.getSpecificData(baseUri, type, keyword)).thenReturn(expectedListOfItems.get(0));
+
+        Response response = crawlService.findData(baseUri, type, keyword);
+
+        JsonReader jsonReader = Json.createReader(new StringReader(response.getEntity().toString()));
+        JsonObject returnedJsonResponse = jsonReader.readObject();
+        jsonReader.close();
+
+        JsonObject expectedResponseJson = Json.createObjectBuilder()
+                .add("id", 1)
+                .add("time", returnedJsonResponse.get("time")) //hardcoded since it cannot be calculated
+                .add("result", movieJson)
+                .build();
+
+        assertThat(expectedResponseJson, equalTo(returnedJsonResponse));
+    }
     /**
      * Test function that asserts
      * if an empty response is returned when
