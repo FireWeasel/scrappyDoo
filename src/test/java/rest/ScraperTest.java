@@ -6,6 +6,8 @@ import model.Movie;
 import model.Music;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.junit.Test;
 
 import org.jsoup.nodes.Document;
@@ -39,12 +41,19 @@ public class ScraperTest {
     }
 
     /**
-     * Exception should be thrown if an invalid html content is passed to scrapeData method
+     * Scrape data should return null if no parseable elements found
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void exceptionIsThrownWhenInvalidHtmlContentIsPassedToScrapeData() {
-        Document INVALID_HTML = new Document(INVALID_URL);
-        scraper.scrapeData(INVALID_HTML);
+    @Test
+    public void scrapeDataShouldReturnNullIfNoParseableElementFound() {
+        //arrange
+        Document document = mock(Document.class);
+        when(document.select("div.div-media-details")).thenReturn(new Elements());
+
+        //act
+        List<Item> list = scraper.scrapeData(document);
+
+        //assert
+        assertNull("scraped data should be null if no parseable element", list);
     }
 
     /**
@@ -168,10 +177,8 @@ public class ScraperTest {
     @Test
     public void getAllLinksShouldReturnEmptyArrayIfNoLinksFound() {
         //arrange
-        String html = "<html><body>" +
-                "<p>text</p>" +
-                "</body></html>";
-        Document document = Jsoup.parse(html);
+        Document document = mock(Document.class);
+        when(document.select("a[href]")).thenReturn(new Elements());
 
         //act
         ArrayList<String> list = scraper.getAllLinks(document);
