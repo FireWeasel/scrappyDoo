@@ -186,19 +186,22 @@ public class CrawlServiceTest {
      */
     @Test
     public void emptyResponseIsReturnedWhenThereIsNoItem() throws Exception {
+        //arrange
         String type = "type";
         String keyword = "keyword";
 
         PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
         when(crawlMock.getSpecificData(baseUri, type, keyword)).thenReturn(null);
 
+        //act
         Response response = crawlService.findData(baseUri, type, keyword);
 
+        //assert
         JsonReader jsonReader = Json.createReader(new StringReader(response.getEntity().toString()));
         JsonObject returnedJsonResponse = jsonReader.readObject();
         jsonReader.close();
-
-        Assert.assertEquals("{}", returnedJsonResponse.get("result").toString());
+        
+        Assert.assertEquals("\"{}\"", returnedJsonResponse.get("result").toString());
     }
     /**
      * Test function that asserts
