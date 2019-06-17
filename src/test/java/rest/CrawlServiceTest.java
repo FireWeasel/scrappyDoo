@@ -36,12 +36,17 @@ public class CrawlServiceTest {
     private Crawler crawlMock;
     private String domain;
     private String baseUri;
+    private List<Item> expectedListOfItems;
     @Before
     public void setUp(){
         crawlService = new CrawlService();
         crawlMock = mock(Crawler.class);
         domain = "http://i357989.hera.fhict.nl";
         baseUri = "http://i357989.hera.fhict.nl/catalog.php";
+        List<String> stars = new ArrayList<String>(Arrays.asList("Tom Hanks", "Rebecca Williams", "Sally Field", "Michael Conner Humphreys"));
+        List<String> writers = new ArrayList<String>(Arrays.asList("Winston Groom", "Eric Roth"));
+        expectedListOfItems = Arrays.asList(new Movie("Forrest Gump","Robert Zemeckis", "Drama",
+                "DVD", 1994, writers,stars),new Music("Clasical", "CD" , 2012, "Symphony","Ludwig van Beethoven"));
     }
     /**
      * Test function that verifies
@@ -63,10 +68,6 @@ public class CrawlServiceTest {
 
     @Test
     public void assertCorrectResponseFormatIsReturnedWhenCrawlingWholeWebsite() throws Exception {
-        List<String> stars = new ArrayList<String>(Arrays.asList("Tom Hanks", "Rebecca Williams", "Sally Field", "Michael Conner Humphreys"));
-        List<String> writers = new ArrayList<String>(Arrays.asList("Winston Groom", "Eric Roth"));
-        List<Item> expectedListOfItems = Arrays.asList(new Movie("Forrest Gump","Robert Zemeckis", "Drama",
-                "DVD", 1994, writers,stars),new Music("Clasical", "CD" , 2012, "Symphony","Ludwig van Beethoven"));
         Gson gson = new GsonBuilder().create();
         List<Item> movies = expectedListOfItems.stream().filter(i -> i instanceof Movie).collect(Collectors.toList());
         List<Item> books = expectedListOfItems.stream().filter(i -> i instanceof model.Book).collect(Collectors.toList());
@@ -86,8 +87,8 @@ public class CrawlServiceTest {
         jsonReader.close();
 
         JsonObject expectedResponseJson = Json.createObjectBuilder()
-                .add("id", 1) //hardcoded since it cannot be calculated
-                .add("time", returnedJsonResponse.get("time"))
+                .add("id", 1)
+                .add("time", returnedJsonResponse.get("time")) //hardcoded since it cannot be calculated
                 .add("movies", moviesJson)
                 .add("music", musicJson)
                 .add("books", booksJson)
