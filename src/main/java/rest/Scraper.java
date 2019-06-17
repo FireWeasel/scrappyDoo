@@ -22,6 +22,19 @@ public class Scraper {
     public Parser parser;
 
     /**
+     * Default constructor
+     */
+    public Scraper() {}
+
+    /**
+     * Constructor for testing purposes
+     * @param parser - mock parser
+     */
+    public Scraper(Parser parser) {
+        this.parser = parser;
+    }
+
+    /**
      * Get a page's content
      * @param url - page's url
      * @return html content of page
@@ -55,6 +68,10 @@ public class Scraper {
      * @return list of scraped items
      */
     public List<Item> scrapeData(Document htmlContent) {
-        return new ArrayList<>();
+        ArrayList<Item> list = new ArrayList<>();
+        Elements elements = htmlContent.select("div-media-details");
+        Item parsed = parser.parse(elements);
+        list.add(parsed);
+        return list;
     }
 }
