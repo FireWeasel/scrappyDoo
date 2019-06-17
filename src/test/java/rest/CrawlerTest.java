@@ -183,16 +183,21 @@ public class CrawlerTest {
      */
     @Test
     public void verifyJsoupObjectIsBeingCreatedWhenGetSpecificDataIsCalled() throws Exception {
-        Crawler crawler = new Crawler();
+        Crawler crawler = new Crawler("google.com");
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
-        when(scraper.scrapeData("")).thenReturn(items);
-        PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
+        ArrayList<String> links = new ArrayList<String>();
+        String url = "http://google.com";
+        Document doc = new Document(url);
+        items.add(new Book());
+        items.add(new Movie());
         PowerMockito.mockStatic(Jsoup.class);
         Connection connection = mock(Connection.class);
-        String url = "http://google.com";
-        when(connection.get()).thenReturn(new Document(url));
+        when(connection.get()).thenReturn(doc);
         when(Jsoup.connect(url)).thenReturn(connection);
+        when(scraper.getAllLinks(doc)).thenReturn(links);
+        when(scraper.scrapeData(doc.outerHtml())).thenReturn(items);
+        PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
         crawler.getSpecificData(url, null, null);
 
@@ -204,12 +209,23 @@ public class CrawlerTest {
      */
     @Test
     public void verifyScraperObjectIsBeingCreatedWhenGetSpecificDataIsCalled() throws Exception {
-        Crawler crawler = new Crawler();
+        Crawler crawler = new Crawler("google.com");
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
-        when(scraper.scrapeData("")).thenReturn(items);
+        ArrayList<String> links = new ArrayList<String>();
+        String url = "http://google.com";
+        Document doc = new Document(url);
+        items.add(new Book());
+        items.add(new Movie());
+        PowerMockito.mockStatic(Jsoup.class);
+        Connection connection = mock(Connection.class);
+        when(connection.get()).thenReturn(doc);
+        when(Jsoup.connect(url)).thenReturn(connection);
+        when(scraper.getAllLinks(doc)).thenReturn(links);
+        when(scraper.scrapeData(doc.outerHtml())).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
-        crawler.getSpecificData("", null, null);
+
+        crawler.getSpecificData(url, "book", null);
 
         PowerMockito.verifyNew(Scraper.class).withNoArguments();
     }
@@ -220,13 +236,23 @@ public class CrawlerTest {
      */
     @Test
     public void verifyExceptionIsNotThrownWhenGetSpecificDataIsCalledWithoutTypeParameter() throws Exception {
-        Crawler crawler = new Crawler();
+        Crawler crawler = new Crawler("google.com");
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
-        items.add(new Book());
-        when(scraper.scrapeData("")).thenReturn(items);
+        items.add(new Book("genre1", "format1", 1994, "author1", "publisher1", "isbn"));
+        items.add(new Music());
+        ArrayList<String> links = new ArrayList<String>();
+        String url = "http://google.com";
+        Document doc = new Document(url);
+        PowerMockito.mockStatic(Jsoup.class);
+        Connection connection = mock(Connection.class);
+        when(connection.get()).thenReturn(doc);
+        when(Jsoup.connect(url)).thenReturn(connection);
+        when(scraper.getAllLinks(doc)).thenReturn(links);
+        when(scraper.scrapeData(doc.outerHtml())).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
-        Item i = crawler.getSpecificData("", null, "");
+
+        Item i = crawler.getSpecificData(url, null, "author1");
 
         Assert.assertEquals(items.get(0), i);
     }
@@ -237,15 +263,25 @@ public class CrawlerTest {
      */
     @Test
     public void verifyExceptionIsNotThrownWhenGetSpecificDataIsCalledWithoutKeywordsParameter() throws Exception {
-        Crawler crawler = new Crawler();
+        Crawler crawler = new Crawler("google.com");
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
         items.add(new Book());
-        when(scraper.scrapeData("")).thenReturn(items);
+        items.add(new Music());
+        ArrayList<String> links = new ArrayList<String>();
+        String url = "http://google.com";
+        Document doc = new Document(url);
+        PowerMockito.mockStatic(Jsoup.class);
+        Connection connection = mock(Connection.class);
+        when(connection.get()).thenReturn(doc);
+        when(Jsoup.connect(url)).thenReturn(connection);
+        when(scraper.getAllLinks(doc)).thenReturn(links);
+        when(scraper.scrapeData(doc.outerHtml())).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
-        Item i = crawler.getSpecificData("", "", null);
 
-        Assert.assertEquals(items.get(0), i);
+        Item i = crawler.getSpecificData(url, "music", null);
+
+        Assert.assertEquals(items.get(1), i);
     }
 
     /**
@@ -254,13 +290,22 @@ public class CrawlerTest {
      */
     @Test
     public void verifyExceptionIsNotThrownWhenGetSpecificDataIsCalledWithoutAnyParameters() throws Exception {
-        Crawler crawler = new Crawler();
+        Crawler crawler = new Crawler("google.com");
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
         items.add(new Book());
-        when(scraper.scrapeData("")).thenReturn(items);
+        ArrayList<String> links = new ArrayList<String>();
+        String url = "http://google.com";
+        Document doc = new Document(url);
+        PowerMockito.mockStatic(Jsoup.class);
+        Connection connection = mock(Connection.class);
+        when(connection.get()).thenReturn(doc);
+        when(Jsoup.connect(url)).thenReturn(connection);
+        when(scraper.getAllLinks(doc)).thenReturn(links);
+        when(scraper.scrapeData(doc.outerHtml())).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
-        Item i = crawler.getSpecificData("", null, null);
+
+        Item i = crawler.getSpecificData(url, null, null);
 
         Assert.assertEquals(items.get(0), i);
     }
@@ -271,19 +316,26 @@ public class CrawlerTest {
      */
     @Test
     public void assertIfReturnTypeIsOfTypeItemWhenGetSpecificDataIsCalledAndItemsHaveBeenFound() throws Exception {
-        Crawler crawler = new Crawler();
+        Crawler crawler = new Crawler("google.com");
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
+        ArrayList<String> links = new ArrayList<String>();
         items.add(new Book());
         items.add(new Music());
         items.add(new Book());
-        items.add(new Movie());
-        when(scraper.scrapeData("")).thenReturn(items);
+        String url = "http://google.com";
+        Document doc = new Document(url);
+        PowerMockito.mockStatic(Jsoup.class);
+        Connection connection = mock(Connection.class);
+        when(connection.get()).thenReturn(doc);
+        when(Jsoup.connect(url)).thenReturn(connection);
+        when(scraper.getAllLinks(doc)).thenReturn(links);
+        when(scraper.scrapeData(doc.outerHtml())).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
-        Item actualResult = crawler.getSpecificData("", "", "");
+        Item actualResult = crawler.getSpecificData(url, "music", null);
 
-        Assert.assertEquals(items.get(0), actualResult);
+        Assert.assertEquals(items.get(1), actualResult);
     }
 
     /**
@@ -292,13 +344,24 @@ public class CrawlerTest {
      */
     @Test
     public void assertIfReturnTypeIsNullWhenGetSpecificDataIsCalledAndNoItemsAreFound() throws Exception {
-        Crawler crawler = new Crawler();
+        Crawler crawler = new Crawler("google.com");
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
-        when(scraper.scrapeData("")).thenReturn(new ArrayList<Item>());
+        ArrayList<String> links = new ArrayList<String>();
+        items.add(new Book());
+        items.add(new Music());
+        items.add(new Book());
+        String url = "http://google.com";
+        Document doc = new Document(url);
+        PowerMockito.mockStatic(Jsoup.class);
+        Connection connection = mock(Connection.class);
+        when(connection.get()).thenReturn(doc);
+        when(Jsoup.connect(url)).thenReturn(connection);
+        when(scraper.getAllLinks(doc)).thenReturn(links);
+        when(scraper.scrapeData(doc.outerHtml())).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
-        Item actualResult = crawler.getSpecificData("", "", "");
+        Item actualResult = crawler.getSpecificData(url, "movie", null);
 
         Assert.assertEquals(null, actualResult);
     }
