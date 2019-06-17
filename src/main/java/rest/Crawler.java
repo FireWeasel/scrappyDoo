@@ -54,19 +54,21 @@ public class Crawler {
         Scraper scraper = new Scraper();
         Document doc = null;
         try {
-            doc = Jsoup.connect(baseUrl).get();
-            if(doc != null) {
-                ArrayList<String> links = scraper.getAllLinks(doc);
-                visitedLinks.add(baseUrl);
-                List<Item> scrapedItems = scraper.scrapeData(doc.outerHtml());
-                for (Item scrapedItem : scrapedItems) {
-                    items.add(scrapedItem);
-                }
-                for (String link : links) {
-                    if(link.contains(domain) && !visitedLinks.contains(link)) {
-                        List<Item> itemsToAppend = getAllData(link);
-                        for (Item i : itemsToAppend) {
-                            items.add(i);
+            if(baseUrl.contains(domain)) {
+                doc = Jsoup.connect(baseUrl).get();
+                if (doc != null) {
+                    ArrayList<String> links = scraper.getAllLinks(doc);
+                    visitedLinks.add(baseUrl);
+                    List<Item> scrapedItems = scraper.scrapeData(doc.outerHtml());
+                    for (Item scrapedItem : scrapedItems) {
+                        items.add(scrapedItem);
+                    }
+                    for (String link : links) {
+                        if (link.contains(domain) && !visitedLinks.contains(link)) {
+                            List<Item> itemsToAppend = getAllData(link);
+                            for (Item i : itemsToAppend) {
+                                items.add(i);
+                            }
                         }
                     }
                 }
@@ -84,6 +86,18 @@ public class Crawler {
      * @return single item of filtered scraped data
      */
     public Item getSpecificData(String baseUrl, String type, String keyword) {
-        return new Book();
+        Item item = null;
+        Scraper s = new Scraper();
+        try {
+            Jsoup.connect("http://google.com").get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        s.getPage(baseUrl);
+        List<Item> items = s.scrapeData("");
+        if(!items.isEmpty()) {
+            item = items.get(0);
+        }
+        return item;
     }
 }
