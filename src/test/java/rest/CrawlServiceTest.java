@@ -137,12 +137,15 @@ public class CrawlServiceTest {
      */
     @Test
     public void verifyCrawlActionIsAddedToLastActionsWhenEachEndpointIsCalled() throws Exception {
+        //arrange
         PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
         when(crawlMock.getVisitedLinks()).thenReturn(new ArrayList<>());
 
+        //act
         crawlService.crawlWholeWebsite(baseUri);
         crawlService.findData(baseUri, "type", "keyword");
 
+        //assert
         Assert.assertEquals(2, crawlService.lastActions.size());
     }
     /**
