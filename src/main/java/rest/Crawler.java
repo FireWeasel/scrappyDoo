@@ -2,6 +2,8 @@ package rest;
 
 import model.Book;
 import model.Item;
+import model.Movie;
+import model.Music;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -89,18 +91,96 @@ public class Crawler {
      * @return single item of filtered scraped data
      */
     public Item getSpecificData(String baseUrl, String type, String keyword) {
-        Item item = null;
-        Scraper s = new Scraper();
+        if (!baseUrl.contains("http://")) {
+            throw new Error();
+        }
+        Scraper scraper = new Scraper();
+        Document doc = null;
         try {
-            Jsoup.connect("http://google.com").get();
+            if(baseUrl.contains(domain)) {
+                doc = Jsoup.connect(baseUrl).get();
+                if (doc != null) {
+                    ArrayList<String> links = scraper.getAllLinks(doc);
+                    visitedLinks.add(baseUrl);
+                    List<Item> scrapedItems = scraper.scrapeData(doc.outerHtml());
+                    for (Item scrapedItem : scrapedItems) {
+                        if(scrapedItem instanceof Book) {
+                            if(type != null) {
+                                if(keyword != null) {
+                                    if (type.toLowerCase().equals("book")) {
+                                        if (scrapedItem.Genre.contains(keyword) || ((Book) scrapedItem).publisher.contains(keyword)) {
+                                            return scrapedItem;
+                                        }
+                                    }
+                                } else {
+                                    if (type.toLowerCase().equals("book")) {
+                                        return scrapedItem;
+                                    }
+                                }
+                            } else if(keyword != null) {
+                                if (scrapedItem.Genre.contains(keyword) || ((Book) scrapedItem).publisher.contains(keyword)) {
+                                    return scrapedItem;
+                                }
+                            } else {
+                                return scrapedItem;
+                            }
+                        } else if(scrapedItem instanceof Music) {
+                            if(type != null) {
+                                if(keyword != null) {
+                                    if (type.toLowerCase().equals("music")) {
+                                        if (scrapedItem.Genre.contains(keyword) || ((Music) scrapedItem).Artist.contains(keyword)) {
+                                            return scrapedItem;
+                                        }
+                                    }
+                                } else {
+                                    if (type.toLowerCase().equals("music")) {
+                                        return scrapedItem;
+                                    }
+                                }
+                            } else if(keyword != null) {
+                                if (scrapedItem.Genre.contains(keyword) || ((Music) scrapedItem).Artist.contains(keyword)) {
+                                    return scrapedItem;
+                                }
+                            } else {
+                                return scrapedItem;
+                            }
+                        } else if (scrapedItem instanceof Movie) {
+                            if(type != null) {
+                                if(keyword != null) {
+                                    if (type.toLowerCase().equals("movie")) {
+                                        if (scrapedItem.Genre.contains(keyword) || ((Movie) scrapedItem).Director.contains(keyword)
+                                                || ((Movie) scrapedItem).Writers.contains(keyword)) {
+                                            return scrapedItem;
+                                        }
+                                    }
+                                } else {
+                                    if (type.toLowerCase().equals("movie")) {
+                                        return scrapedItem;
+                                    }
+                                }
+                            } else if(keyword != null) {
+                                if (scrapedItem.Genre.contains(keyword) || ((Movie) scrapedItem).Director.contains(keyword)
+                                        || ((Movie) scrapedItem).Writers.contains(keyword)) {
+                                    return scrapedItem;
+                                }
+                            } else {
+                                return scrapedItem;
+                            }
+                        }
+                    }
+                    for (String link : links) {
+                        if (link.contains(domain) && !visitedLinks.contains(link)) {
+                            Item item = getSpecificData(link, type, keyword);
+                            if(item != null) {
+                                return item;
+                            }
+                        }
+                    }
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        s.getPage(baseUrl);
-        List<Item> items = s.scrapeData("");
-        if(!items.isEmpty()) {
-            item = items.get(0);
-        }
-        return item;
+        return null;
     }
 }
