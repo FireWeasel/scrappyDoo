@@ -237,10 +237,13 @@ public class CrawlServiceTest {
      */
     @Test
     public void emptyResponseIsReturnedWhenThereIsNoLastCrawlAction() {
+        //arrange
         Gson gson = new GsonBuilder().create();
 
+        //act
         Response response = crawlService.getLastCrawlingAction();
 
+        //assert
         JsonReader jsonReader = Json.createReader(new StringReader(response.getEntity().toString()));
         JsonObject returnedJsonResponse = jsonReader.readObject();
         jsonReader.close();
