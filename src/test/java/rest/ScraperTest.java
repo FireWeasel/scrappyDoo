@@ -41,6 +41,7 @@ public class ScraperTest {
      */
     @Test
     public void assertReturnedScrapedItemIsNotNullWhenParsingValidElement() {
+        //arrange
         Parser mockParser = mock(Parser.class);
         Scraper scraper = new Scraper(mockParser);
         String html = "<html><body><div class=\"div-media-details\">" +
@@ -55,10 +56,12 @@ public class ScraperTest {
                 "</div></body></html>";
         Document document = Jsoup.parse(html);
         Music expected = new Music("Beethoven: Complete Symphonies", "Classical", "CD", 2012, "Ludwig van Beethoven");
-        when(mockParser.parse(document.select("div-media-details"))).thenReturn(expected);
+        when(mockParser.parse(document.select("div.div-media-details"))).thenReturn(expected);
 
+        //act
         List<Item> list = scraper.scrapeData(document);
 
+        //assert
         assertNotNull("return list should not be null", list);
         assertEquals("return list should have length equals one", 1, list.size());
         assertSame("returned item should be the same", expected, list.get(0));
