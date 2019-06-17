@@ -55,10 +55,11 @@ public class CrawlerTest {
         Crawler crawler = new Crawler();
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
-        when(scraper.scrapeData("")).thenReturn(items);
+        String url = "http://google.com";
+        when(scraper.scrapeData(url)).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
-        crawler.getAllData("");
+        crawler.getAllData(url);
 
         PowerMockito.verifyNew(Scraper.class).withNoArguments();
     }
@@ -71,10 +72,11 @@ public class CrawlerTest {
         Crawler crawler = new Crawler();
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
-        when(scraper.scrapeData("")).thenReturn(items);
+        String url = "http://google.com";
+        when(scraper.scrapeData(url)).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
-        List<Item> li = crawler.getAllData("");
+        List<Item> li = crawler.getAllData(url);
 
         Assert.assertTrue(li instanceof ArrayList);
     }
@@ -88,12 +90,20 @@ public class CrawlerTest {
         Crawler crawler = new Crawler();
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
+        ArrayList<String> links = new ArrayList<String>();
+        String url = "http://google.com";
+        Document doc = new Document(url);
         items.add(new Book());
         items.add(new Movie());
-        when(scraper.scrapeData("")).thenReturn(items);
+        PowerMockito.mockStatic(Jsoup.class);
+        Connection connection = mock(Connection.class);
+        when(connection.get()).thenReturn(doc);
+        when(Jsoup.connect(url)).thenReturn(connection);
+        when(scraper.getAllLinks(doc)).thenReturn(links);
+        when(scraper.scrapeData(doc.outerHtml())).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
-        List<Item> actualResult = crawler.getAllData("");
+        List<Item> actualResult = crawler.getAllData(url);
 
         Assert.assertEquals(items, actualResult);
     }
@@ -107,10 +117,11 @@ public class CrawlerTest {
         Crawler crawler = new Crawler();
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
-        when(scraper.scrapeData("")).thenReturn(new ArrayList<Item>());
+        String url = "http://google.com";
+        when(scraper.scrapeData(url)).thenReturn(new ArrayList<Item>());
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
-        List<Item> actualResult = crawler.getAllData("");
+        List<Item> actualResult = crawler.getAllData(url);
 
         Assert.assertEquals(items, actualResult);
     }
@@ -132,10 +143,11 @@ public class CrawlerTest {
     public void verifyIfExceptionIsThrownFromScraperCrawlingIsNotInterruptedWhenGetAllDataIsCalled() throws Exception {
         Crawler crawler = new Crawler();
         Scraper scraper = mock(Scraper.class);
-        when(scraper.scrapeData("")).thenThrow(IllegalArgumentException.class);
+        String url = "http://google.com";
+        when(scraper.scrapeData(url)).thenThrow(IllegalArgumentException.class);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
-        List<Item> actualResult = crawler.getAllData("");
+        List<Item> actualResult = crawler.getAllData(url);
 
         Assert.assertEquals(new ArrayList<Item>(), new ArrayList<Item>());
     }
