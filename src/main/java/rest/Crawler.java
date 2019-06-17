@@ -50,6 +50,9 @@ public class Crawler {
      * @return a list of all scraped data
      */
     public List<Item> getAllData(String baseUrl) {
+        if (!baseUrl.contains("http://")) {
+            throw new Error();
+        }
         List<Item> items = new ArrayList<Item>();
         Scraper scraper = new Scraper();
         Document doc = null;
