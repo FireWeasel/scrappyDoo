@@ -2,8 +2,10 @@ package rest;
 
 import model.Book;
 import model.Item;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
-import javax.swing.text.Document;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,12 +34,47 @@ public class Crawler {
      */
     public Scraper scraper;
 
+    public Crawler() {
+        visitedLinks = new ArrayList<String>();
+        depth = 0;
+    }
+
+    public Crawler(String domain) {
+        this.domain = domain;
+        visitedLinks = new ArrayList<String>();
+        depth = 0;
+    }
+
     /**
      * Get all data from one crawled webpage
      * @return a list of all scraped data
      */
     public List<Item> getAllData(String baseUrl) {
-        return new ArrayList<>();
+        List<Item> items = new ArrayList<Item>();
+        Scraper scraper = new Scraper();
+        Document doc = null;
+        try {
+            doc = Jsoup.connect(baseUrl).get();
+            if(doc != null) {
+                ArrayList<String> links = scraper.getAllLinks(doc);
+                visitedLinks.add(baseUrl);
+                List<Item> scrapedItems = scraper.scrapeData(doc.outerHtml());
+                for (Item scrapedItem : scrapedItems) {
+                    items.add(scrapedItem);
+                }
+                for (String link : links) {
+                    if(link.contains(domain) && !visitedLinks.contains(link)) {
+                        List<Item> itemsToAppend = getAllData(link);
+                        for (Item i : itemsToAppend) {
+                            items.add(i);
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return items;
     }
 
     /**
