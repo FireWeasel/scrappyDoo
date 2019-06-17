@@ -185,14 +185,17 @@ public class ScraperTest {
      */
     @Test
     public void verifyJsoupConnectFunctionIsBeingCalledInsideGetPage() throws IOException {
+        //arrange
         PowerMockito.mockStatic(Jsoup.class);
         Connection connection = mock(Connection.class);
         String url = "http://google.com";
         when(connection.get()).thenReturn(new Document(url));
         when(Jsoup.connect(url)).thenReturn(connection);
 
+        //act
         scraper.getPage(url);
 
+        //assert
         verify(Jsoup.connect(url)).get();
     }
 }
