@@ -38,6 +38,7 @@ public class CrawlServiceTest {
     private String domain;
     private String baseUri;
     private List<Item> expectedListOfItems;
+    private String type;
     @Before
     public void setUp(){
         crawlService = new CrawlService();
@@ -48,6 +49,7 @@ public class CrawlServiceTest {
         List<String> writers = new ArrayList<String>(Arrays.asList("Winston Groom", "Eric Roth"));
         expectedListOfItems = Arrays.asList(new Movie("Forrest Gump","Robert Zemeckis", "Drama",
                 "DVD", 1994, writers,stars),new Music("Clasical", "CD" , 2012, "Symphony","Ludwig van Beethoven"));
+        type = "Music";
     }
     /**
      * Test function that verifies
@@ -120,7 +122,6 @@ public class CrawlServiceTest {
     public void verifyGetSpecificDataOfCrawlerWhenFindingData() throws Exception {
         //ARRANGE
         PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
-        String type = "type";
         String keyword = "keyword";
 
         //ACT
@@ -143,7 +144,7 @@ public class CrawlServiceTest {
 
         //act
         crawlService.crawlWholeWebsite(baseUri);
-        crawlService.findData(baseUri, "type", "keyword");
+        crawlService.findData(baseUri, type, "keyword");
 
         //assert
         Assert.assertEquals(2, crawlService.lastActions.size());
@@ -163,7 +164,6 @@ public class CrawlServiceTest {
         String movieJson = gson.toJson(movie);
 
         PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
-        String type = "type";
         String keyword = "keyword";
         when(crawlMock.getSpecificData(baseUri, type, keyword)).thenReturn(expectedListOfItems.get(0));
 
@@ -214,7 +214,6 @@ public class CrawlServiceTest {
     @Test
     public void emptyResponseIsReturnedWhenThereIsNoItem() throws Exception {
         //arrange
-        String type = "type";
         String keyword = "keyword";
 
         PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
