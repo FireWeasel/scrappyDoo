@@ -1,10 +1,18 @@
 package rest;
 
+import model.Item;
+import model.Music;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.junit.Test;
 
 import org.jsoup.nodes.Document;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class ScraperTest {
     private static String INVALID_URL = "invalid.url.should.throw";
@@ -33,7 +41,27 @@ public class ScraperTest {
      */
     @Test
     public void assertReturnedScrapedItemIsNotNullWhenParsingValidElement() {
+        Parser mockParser = mock(Parser.class);
+        Scraper scraper = new Scraper(mockParser);
+        String html = "<html><body><div class=\"div-media-details\">" +
+                "<h1>Beethoven: Complete Symphonies</h1>" +
+                "<table><tbody>" +
+                "<tr><th>Category</th><td>Music</td></tr>" +
+                "<tr><th>Genre</th><td>Classical</td></tr>" +
+                "<tr><th>Format</th><td>CD</td></tr>" +
+                "<tr><th>Year</th><td>2012</td></tr>" +
+                "<tr><th>Artist</th><td>Ludwig van Beethoven</td></tr>" +
+                "</tbody></table>" +
+                "</div></body></html>";
+        Document document = Jsoup.parse(html);
+        Music expected = new Music("Beethoven: Complete Symphonies", "Classical", "CD", 2012, "Ludwig van Beethoven");
+        when(mockParser.parse(document.select("div-media-details"))).thenReturn(expected);
 
+        List<Item> list = scraper.scrapeData(document);
+
+        assertNotNull("return list should not be null", list);
+        assertEquals("return list should have length equals one", 1, list.size());
+        assertSame("returned item should be the same", expected, list.get(0));
     }
 
     /**
