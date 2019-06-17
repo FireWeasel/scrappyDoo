@@ -152,6 +152,15 @@ public class CrawlService {
             JsonObject jsonResponse = Json.createObjectBuilder().build();
             return Response.status(200).entity(jsonResponse).type(MediaType.APPLICATION_JSON).build();
         }
-        return null;
+        int lastIndex = lastActions.size() - 1;
+        CrawlAction last = lastActions.get(lastIndex);
+        JsonObject jsonResponse = Json.createObjectBuilder()
+                .add("id", this.id)
+                .add("time_elapsed", Long.toString(last.timeElapsed))
+                .add("pages_explored", last.nrOfPagesVisited)
+                .add("unique_pages_explored", last.nrOfUniquePagesVisited)
+                .add("search_depth", last.depth)
+                .build();
+        return Response.status(200).entity(jsonResponse).type(MediaType.APPLICATION_JSON).build();
     }
 }
