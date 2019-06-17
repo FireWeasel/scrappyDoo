@@ -1,6 +1,8 @@
 package rest;
 
+import model.Book;
 import model.Item;
+import model.Movie;
 import model.Music;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -37,10 +39,82 @@ public class ScraperTest {
     }
 
     /**
-     * When passing a valid element, an object of type Item should be returned and be not null
+     * Parsed movie is not null when being fed valid html content with one movie object
      */
     @Test
-    public void assertReturnedScrapedItemIsNotNullWhenParsingValidElement() {
+    public void assertScrapedMovieIsNotNullWhenParsingValidHtmlContent() {
+        //arrange
+        Parser mockParser = mock(Parser.class);
+        Scraper scraper = new Scraper(mockParser);
+        String html = "<html><body><div class=\"div-media-details\">" +
+                "<h1>Forrest Gump</h1>" +
+                "<table><tbody>" +
+                "<tr><th>Category</th><td>Movies</td></tr>" +
+                "<tr><th>Genre</th><td>Drama</td></tr>" +
+                "<tr><th>Format</th><td>DVD</td></tr>" +
+                "<tr><th>Year</th><td>1994</td></tr>" +
+                "<tr><th>Director</th><td>Robert Zemeckis</td></tr>" +
+                "<tr><th>Writers</th><td>Winston Groom, Eric Roth</td></tr>" +
+                "<tr><th>Stars</th><td>Tom Hanks, Rebecca Williams, Sally Field, Michael Conner Humphreys</td></tr>" +
+                "</tbody></table>" +
+                "</div></body></html>";
+        Document document = Jsoup.parse(html);
+        Movie expected = new Movie(
+                "Forrest Gump", "Drama", "DVD", 1994, "Robert Zemeckis", "Winston Groom, Eric Roth",
+                "Tom Hanks, Rebecca Williams, Sally Field, Michael Conner Humphreys"
+        );
+        when(mockParser.parse(document.select("div.div-media-details"))).thenReturn(expected);
+
+        //act
+        List<Item> list = scraper.scrapeData(document);
+
+        //assert
+        assertNotNull("return list should not be null", list);
+        assertEquals("return list should have length equals one", 1, list.size());
+        assertSame("returned item should be the same", expected, list.get(0));
+    }
+
+    /**
+     * Parsed book is not null when being fed valid html content with one book object
+     */
+    @Test
+    public void assertScrapedBookIsNotNullWhenParsingValidHtmlContent() {
+        //arrange
+        Parser mockParser = mock(Parser.class);
+        Scraper scraper = new Scraper(mockParser);
+        String html = "<html><body><div class=\"div-media-details\">" +
+                "<h1>Clean Code: A Handbook of Agile Software Craftsmanship</h1>" +
+                "<table><tbody>" +
+                "<tr><th>Category</th><td>Books</td></tr>" +
+                "<tr><th>Genre</th><td>Tech</td></tr>" +
+                "<tr><th>Format</th><td>Ebook</td></tr>" +
+                "<tr><th>Year</th><td>2008</td></tr>" +
+                "<tr><th>Authors</th><td>Robert C. Martin</td></tr>" +
+                "<tr><th>Publisher</th><td>Prentice Hall</td></tr>" +
+                "<tr><th>ISBN</th><td>978-0132350884</td></tr>" +
+                "</tbody></table>" +
+                "</div></body></html>";
+        Document document = Jsoup.parse(html);
+        Book expected = new Book(
+                "Clean Code: A Handbook of Agile Software Craftsmanship", "Tech", "Ebook", 2008, "Robert C. Martin",
+                "Prentice Hall", "978-0132350884"
+        );
+        when(mockParser.parse(document.select("div.div-media-details"))).thenReturn(expected);
+
+        //act
+        List<Item> list = scraper.scrapeData(document);
+
+        //assert
+        assertNotNull("return list should not be null", list);
+        assertEquals("return list should have length equals one", 1, list.size());
+        assertSame("returned item should be the same", expected, list.get(0));
+    }
+
+    /**
+     * Parsed music is not null when being fed valid html content with one music object
+     */
+    @Test
+    public void assertScrapedMusicIsNotNullWhenParsingValidHtmlContent() {
         //arrange
         Parser mockParser = mock(Parser.class);
         Scraper scraper = new Scraper(mockParser);
@@ -65,30 +139,6 @@ public class ScraperTest {
         assertNotNull("return list should not be null", list);
         assertEquals("return list should have length equals one", 1, list.size());
         assertSame("returned item should be the same", expected, list.get(0));
-    }
-
-    /**
-     * Parsed movie is not null when being fed valid html content with one movie object
-     */
-    @Test
-    public void assertScrapedMovieIsNotNullWhenParsingValidHtmlContent() {
-
-    }
-
-    /**
-     * Parsed book is not null when being fed valid html content with one book object
-     */
-    @Test
-    public void assertScrapedBookIsNotNullWhenParsingValidHtmlContent() {
-
-    }
-
-    /**
-     * Parsed music is not null when being fed valid html content with one music object
-     */
-    @Test
-    public void assertScrapedMusicIsNotNullWhenParsingValidHtmlContent() {
-
     }
 
     /**

@@ -20,9 +20,9 @@ public class Movie extends Item {
      * Field containing information about the stars
      * participating in the movie.
      */
-    public int Stars;
+    public String Stars;
 
-    public Movie(String title, String genre, String format, int year, String director, String writers, int stars) {
+    public Movie(String title, String genre, String format, int year, String director, String writers, String stars) {
         super(title, genre, format, year);
         Director = director;
         Writers = writers;
