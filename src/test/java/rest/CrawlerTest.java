@@ -34,11 +34,12 @@ public class CrawlerTest {
         Crawler crawler = new Crawler("google.com");
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
-        when(scraper.scrapeData("")).thenReturn(items);
-        PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
-        PowerMockito.mockStatic(Jsoup.class);
         Connection connection = mock(Connection.class);
         String url = "http://google.com";
+        Document doc = new Document(url);
+        when(scraper.scrapeData(doc)).thenReturn(items);
+        PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
+        PowerMockito.mockStatic(Jsoup.class);
         when(connection.get()).thenReturn(new Document(url));
         when(Jsoup.connect(url)).thenReturn(connection);
 
@@ -56,7 +57,8 @@ public class CrawlerTest {
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
         String url = "http://google.com";
-        when(scraper.scrapeData(url)).thenReturn(items);
+        Document doc = new Document(url);
+        when(scraper.scrapeData(doc)).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
         crawler.getAllData(url);
@@ -73,7 +75,8 @@ public class CrawlerTest {
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
         String url = "http://google.com";
-        when(scraper.scrapeData(url)).thenReturn(items);
+        Document doc = new Document(url);
+        when(scraper.scrapeData(doc)).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
         List<Item> li = crawler.getAllData(url);
@@ -100,7 +103,7 @@ public class CrawlerTest {
         when(connection.get()).thenReturn(doc);
         when(Jsoup.connect(url)).thenReturn(connection);
         when(scraper.getAllLinks(doc)).thenReturn(links);
-        when(scraper.scrapeData(doc.outerHtml())).thenReturn(items);
+        when(scraper.scrapeData(doc)).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
         List<Item> actualResult = crawler.getAllData(url);
@@ -126,7 +129,7 @@ public class CrawlerTest {
         when(connection.get()).thenReturn(doc);
         when(Jsoup.connect(url)).thenReturn(connection);
         when(scraper.getAllLinks(doc)).thenReturn(links);
-        when(scraper.scrapeData(doc.outerHtml())).thenReturn(items);
+        when(scraper.scrapeData(doc)).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
         List<Item> actualResult = crawler.getAllData(url);
@@ -144,7 +147,8 @@ public class CrawlerTest {
         Scraper scraper = mock(Scraper.class);
         List<Item> items = new ArrayList<Item>();
         String url = "http://google.com";
-        when(scraper.scrapeData(url)).thenReturn(new ArrayList<Item>());
+        Document doc = new Document(url);
+        when(scraper.scrapeData(doc)).thenReturn(new ArrayList<Item>());
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
         List<Item> actualResult = crawler.getAllData(url);
@@ -170,7 +174,8 @@ public class CrawlerTest {
         Crawler crawler = new Crawler("google.com");
         Scraper scraper = mock(Scraper.class);
         String url = "http://google.com";
-        when(scraper.scrapeData(url)).thenThrow(IllegalArgumentException.class);
+        Document doc = new Document(url);
+        when(scraper.scrapeData(doc)).thenThrow(IllegalArgumentException.class);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
         List<Item> actualResult = crawler.getAllData(url);
@@ -196,7 +201,7 @@ public class CrawlerTest {
         when(connection.get()).thenReturn(doc);
         when(Jsoup.connect(url)).thenReturn(connection);
         when(scraper.getAllLinks(doc)).thenReturn(links);
-        when(scraper.scrapeData(doc.outerHtml())).thenReturn(items);
+        when(scraper.scrapeData(doc)).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
         crawler.getSpecificData(url, null, null);
@@ -222,7 +227,7 @@ public class CrawlerTest {
         when(connection.get()).thenReturn(doc);
         when(Jsoup.connect(url)).thenReturn(connection);
         when(scraper.getAllLinks(doc)).thenReturn(links);
-        when(scraper.scrapeData(doc.outerHtml())).thenReturn(items);
+        when(scraper.scrapeData(doc)).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
         crawler.getSpecificData(url, "book", null);
@@ -249,7 +254,7 @@ public class CrawlerTest {
         when(connection.get()).thenReturn(doc);
         when(Jsoup.connect(url)).thenReturn(connection);
         when(scraper.getAllLinks(doc)).thenReturn(links);
-        when(scraper.scrapeData(doc.outerHtml())).thenReturn(items);
+        when(scraper.scrapeData(doc)).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
         Item i = crawler.getSpecificData(url, null, "author1");
@@ -276,7 +281,7 @@ public class CrawlerTest {
         when(connection.get()).thenReturn(doc);
         when(Jsoup.connect(url)).thenReturn(connection);
         when(scraper.getAllLinks(doc)).thenReturn(links);
-        when(scraper.scrapeData(doc.outerHtml())).thenReturn(items);
+        when(scraper.scrapeData(doc)).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
         Item i = crawler.getSpecificData(url, "music", null);
@@ -302,7 +307,7 @@ public class CrawlerTest {
         when(connection.get()).thenReturn(doc);
         when(Jsoup.connect(url)).thenReturn(connection);
         when(scraper.getAllLinks(doc)).thenReturn(links);
-        when(scraper.scrapeData(doc.outerHtml())).thenReturn(items);
+        when(scraper.scrapeData(doc)).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
         Item i = crawler.getSpecificData(url, null, null);
@@ -330,7 +335,7 @@ public class CrawlerTest {
         when(connection.get()).thenReturn(doc);
         when(Jsoup.connect(url)).thenReturn(connection);
         when(scraper.getAllLinks(doc)).thenReturn(links);
-        when(scraper.scrapeData(doc.outerHtml())).thenReturn(items);
+        when(scraper.scrapeData(doc)).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
         Item actualResult = crawler.getSpecificData(url, "music", null);
@@ -358,7 +363,7 @@ public class CrawlerTest {
         when(connection.get()).thenReturn(doc);
         when(Jsoup.connect(url)).thenReturn(connection);
         when(scraper.getAllLinks(doc)).thenReturn(links);
-        when(scraper.scrapeData(doc.outerHtml())).thenReturn(items);
+        when(scraper.scrapeData(doc)).thenReturn(items);
         PowerMockito.whenNew(Scraper.class).withAnyArguments().thenReturn(scraper);
 
         Item actualResult = crawler.getSpecificData(url, "movie", null);

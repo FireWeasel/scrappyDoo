@@ -64,7 +64,7 @@ public class Crawler {
                 if (doc != null) {
                     ArrayList<String> links = scraper.getAllLinks(doc);
                     visitedLinks.add(baseUrl);
-                    List<Item> scrapedItems = scraper.scrapeData(doc.outerHtml());
+                    List<Item> scrapedItems = scraper.scrapeData(doc);
                     for (Item scrapedItem : scrapedItems) {
                         items.add(scrapedItem);
                     }
@@ -102,7 +102,7 @@ public class Crawler {
                 if (doc != null) {
                     ArrayList<String> links = scraper.getAllLinks(doc);
                     visitedLinks.add(baseUrl);
-                    List<Item> scrapedItems = scraper.scrapeData(doc.outerHtml());
+                    List<Item> scrapedItems = scraper.scrapeData(doc);
                     for (Item scrapedItem : scrapedItems) {
                         if(scrapedItem instanceof Book) {
                             if(type != null) {

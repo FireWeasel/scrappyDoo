@@ -7,6 +7,15 @@ package model;
  * @version 0.1
  */
 public abstract class Item {
+    public Item() {
+    }
+
+    public Item(String genre, String format, int year) {
+        Genre = genre;
+        Format = format;
+        Year = year;
+    }
+
     /**
      * Field containing information about
      * the genre of the item.

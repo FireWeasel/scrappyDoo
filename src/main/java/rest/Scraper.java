@@ -31,7 +31,7 @@ public class Scraper {
      * @param htmlContent - html to scrape
      * @return list of scraped items
      */
-    public List<Item> scrapeData(String htmlContent) {
+    public List<Item> scrapeData(Document htmlContent) {
         return new ArrayList<>();
     }
 }
