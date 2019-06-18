@@ -14,8 +14,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.json.Json;
-import javax.json.JsonObject;
 import javax.json.JsonReader;
+import javax.json.JsonObject;
 import javax.ws.rs.core.Response;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -88,10 +88,10 @@ public class CrawlServiceTest {
         Response response = crawlService.crawlWholeWebsite(baseUri);
 
         JsonReader jsonReader = Json.createReader(new StringReader(response.getEntity().toString()));
-        JsonObject returnedJsonResponse = jsonReader.readObject();
+        javax.json.JsonObject returnedJsonResponse = jsonReader.readObject();
         jsonReader.close();
 
-        JsonObject expectedResponseJson = Json.createObjectBuilder()
+        javax.json.JsonObject expectedResponseJson = Json.createObjectBuilder()
                 .add("id", 1)
                 .add("time", returnedJsonResponse.get("time")) //hardcoded since it cannot be calculated
                 .add("movies", moviesJson)

@@ -25,17 +25,21 @@ public abstract class Item {
      * Field containing information about
      * the genre of the item.
      */
-    private String Genre;
+    public String Genre;
     /**
      * Field containing information about the
      * format of the item.
      */
-    private String Format;
+    public String Format;
     /**
      * Field containing information about
      * the year of creation of the item.
      */
-    private int Year;
+    public int Year;
+
+
+    protected Item() {
+    }
 
     public String getGenre() {
         return Genre;

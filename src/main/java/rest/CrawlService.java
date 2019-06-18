@@ -10,6 +10,7 @@ import javax.json.JsonObject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class CrawlService {
     @GET
     @Path("wholepage")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response crawlWholeWebsite(String baseUrl) throws Exception {
+    public Response crawlWholeWebsite(@QueryParam("url")String baseUrl) throws Exception {
         if(baseUrl.contains("http://")) {
             long start = System.nanoTime();
             String domain = baseUrl.split("nl/")[0];
@@ -105,7 +106,7 @@ public class CrawlService {
     @GET
     @Path("finddata")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findData(String baseUrl, String type, String keyword) throws Exception {
+    public Response findData(@QueryParam("url")String baseUrl,@QueryParam("type") String type,@QueryParam("keywords") String keyword) throws Exception {
         if (baseUrl.startsWith("http://")) {
             if (!(type.equals("Music") || type.equals("Movie") || type.equals("Books"))) {
                 throw new IllegalArgumentException("invalid type");
