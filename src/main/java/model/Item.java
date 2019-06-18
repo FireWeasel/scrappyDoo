@@ -18,25 +18,25 @@ public abstract class Item {
     }
     /**
      * Field containing information about
+     * the title of the item.
+     */
+    public String Title;
+    /**
+     * Field containing information about
      * the genre of the item.
      */
-    private String Genre;
+    public String Genre;
     /**
      * Field containing information about the
      * format of the item.
      */
-    private String Format;
+    public String Format;
     /**
      * Field containing information about
      * the year of creation of the item.
      */
-    private int Year;
+    public int Year;
 
-    /**
-     * Field containing information about
-     * the title of the item.
-     */
-    private String Title;
 
     protected Item() {
     }

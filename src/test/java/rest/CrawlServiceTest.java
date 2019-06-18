@@ -2,8 +2,6 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import model.Item;
 import model.Movie;
 import model.Music;
@@ -17,6 +15,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.json.Json;
 import javax.json.JsonReader;
+import javax.json.JsonObject;
 import javax.ws.rs.core.Response;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -39,6 +38,8 @@ public class CrawlServiceTest {
     private String domain;
     private String baseUri;
     private List<Item> expectedListOfItems;
+    private String type;
+    private String keyword;
     @Before
     public void setUp(){
         crawlService = new CrawlService();
@@ -49,6 +50,8 @@ public class CrawlServiceTest {
         List<String> writers = new ArrayList<String>(Arrays.asList("Winston Groom", "Eric Roth"));
         expectedListOfItems = Arrays.asList(new Movie("Forrest Gump","Robert Zemeckis", "Drama",
                 "DVD", 1994, writers,stars),new Music("Clasical", "CD" , 2012, "Symphony","Ludwig van Beethoven"));
+        type = "Music";
+        keyword = "keyword";
     }
     /**
      * Test function that verifies
@@ -111,23 +114,6 @@ public class CrawlServiceTest {
 
         crawlService.crawlWholeWebsite(baseUri);
     }
-    /**
-     * Test function that asserts
-     * if an empty response is returned when
-     * there are no crawled/scraped items.
-     */
-    @Test
-    public void emptyResponseIsReturnedWhenThereAreNoItems() throws Exception {
-        PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
-        when(crawlMock.getAllData(baseUri)).thenReturn(new ArrayList<Item>());
-
-        Response response = crawlService.crawlWholeWebsite(baseUri);
-
-        String responseToString = response.getEntity().toString();
-        JsonObject jsonObject = new JsonParser().parse(responseToString).getAsJsonObject();
-
-        Assert.assertTrue(jsonObject.get("movies").getAsString().equals("[]"));
-    }
 
     /**
      * Test function that verifies
@@ -135,14 +121,35 @@ public class CrawlServiceTest {
      * findData endpoint.
      */
     @Test
-    public void verifyGetSpecificDataOfCrawlerWhenFindingData(){}
+    public void verifyGetSpecificDataOfCrawlerWhenFindingData() throws Exception {
+        //ARRANGE
+        PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
+
+        //ACT
+        crawlService.findData(baseUri, type, keyword);
+
+        //ASSERT
+        PowerMockito.verifyNew(Crawler.class).withArguments(domain);
+        verify(crawlMock, atLeastOnce()).getSpecificData(baseUri, type, keyword);
+    }
     /**
      * Test function that verifies
      * if a CrawlAction object is created and stored within
      * CrawlService after each of its function calls.
      */
     @Test
-    public void verifyCrawlActionIsAddedToLastActionsWhenEachEndpointIsCalled(){}
+    public void verifyCrawlActionIsAddedToLastActionsWhenEachEndpointIsCalled() throws Exception {
+        //arrange
+        PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
+        when(crawlMock.getVisitedLinks()).thenReturn(new ArrayList<>());
+
+        //act
+        crawlService.crawlWholeWebsite(baseUri);
+        crawlService.findData(baseUri, type, "keyword");
+
+        //assert
+        Assert.assertEquals(2, crawlService.lastActions.size());
+    }
     /**
      * Test function that asserts
      * if Response returned by findData endpoint
@@ -150,21 +157,96 @@ public class CrawlServiceTest {
      * (parameterized test).
      */
     @Test
-    public void assertIfResponseContainsItemWhenFindingData(){}
+    public void assertIfResponseContainsItemWhenFindingData() throws Exception {
+        //arrange
+        Gson gson = new GsonBuilder().create();
+        Item movie = expectedListOfItems.get(0);
+
+        String movieJson = gson.toJson(movie);
+
+        PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
+        when(crawlMock.getSpecificData(baseUri, type, keyword)).thenReturn(expectedListOfItems.get(0));
+
+        //act
+        Response response = crawlService.findData(baseUri, type, keyword);
+
+        //assert
+        JsonReader jsonReader = Json.createReader(new StringReader(response.getEntity().toString()));
+        JsonObject returnedJsonResponse = jsonReader.readObject();
+        jsonReader.close();
+
+        JsonObject expectedResponseJson = Json.createObjectBuilder()
+                .add("id", 1)
+                .add("time", returnedJsonResponse.get("time")) //hardcoded since it cannot be calculated
+                .add("result", movieJson)
+                .build();
+
+        assertThat(expectedResponseJson, equalTo(returnedJsonResponse));
+    }
+    /**
+     * Test function that asserts
+     * if an empty response is returned when
+     * there are no crawled/scraped items.
+     */
+    @Test
+    public void emptyResponseIsReturnedWhenThereAreNoItems() throws Exception {
+        //arrange
+        PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
+        when(crawlMock.getAllData(baseUri)).thenReturn(null);
+
+        //act
+        Response response = crawlService.crawlWholeWebsite(baseUri);
+
+        //assert
+        JsonReader jsonReader = Json.createReader(new StringReader(response.getEntity().toString()));
+        JsonObject returnedJsonResponse = jsonReader.readObject();
+        jsonReader.close();
+
+        Assert.assertEquals("\"[]\"", returnedJsonResponse.get("music").toString());
+        Assert.assertEquals("\"[]\"", returnedJsonResponse.get("movies").toString());
+        Assert.assertEquals("\"[]\"", returnedJsonResponse.get("books").toString());
+    }
     /**
      * Test function that asserts
      * if an empty response is returned when
      * there is no crawled/scraped item.
      */
     @Test
-    public void emptyResponseIsReturnedWhenThereIsNoItem(){}
+    public void emptyResponseIsReturnedWhenThereIsNoItem() throws Exception {
+        //arrange
+        PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
+        when(crawlMock.getSpecificData(baseUri, type, keyword)).thenReturn(null);
+
+        //act
+        Response response = crawlService.findData(baseUri, type, keyword);
+
+        //assert
+        JsonReader jsonReader = Json.createReader(new StringReader(response.getEntity().toString()));
+        JsonObject returnedJsonResponse = jsonReader.readObject();
+        jsonReader.close();
+
+        Assert.assertEquals("\"{}\"", returnedJsonResponse.get("result").toString());
+    }
     /**
      * Test function that asserts
      * if an empty response is returned when
      * there is no last Crawled Action.
      */
     @Test
-    public void emptyResponseIsReturnedWhenThereIsNoLastCrawlAction(){}
+    public void emptyResponseIsReturnedWhenThereIsNoLastCrawlAction() {
+        //arrange
+        Gson gson = new GsonBuilder().create();
+
+        //act
+        Response response = crawlService.getLastCrawlingAction();
+
+        //assert
+        JsonReader jsonReader = Json.createReader(new StringReader(response.getEntity().toString()));
+        JsonObject returnedJsonResponse = jsonReader.readObject();
+        jsonReader.close();
+
+        Assert.assertEquals(gson.toJson(new Object()), returnedJsonResponse.toString());
+    }
     /**
      * Test function that asserts
      * that an Item can be returned when
@@ -172,13 +254,46 @@ public class CrawlServiceTest {
      * findData endpoint.
      */
     @Test
-    public void emptyKeywordsArePassedForFindDataAndItemIsReturned(){}
+    public void emptyKeywordsArePassedForFindDataAndItemIsReturned() throws Exception {
+        //arrange
+        Gson gson = new GsonBuilder().create();
+        Item movie = expectedListOfItems.get(0);
 
+        String movieJson = gson.toJson(movie);
+
+        PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
+        String keyword = "";
+        when(crawlMock.getSpecificData(baseUri, type, keyword)).thenReturn(expectedListOfItems.get(0));
+
+        //act
+        Response response = crawlService.findData(baseUri, type, keyword);
+
+        //assert
+        JsonReader jsonReader = Json.createReader(new StringReader(response.getEntity().toString()));
+        JsonObject returnedJsonResponse = jsonReader.readObject();
+        jsonReader.close();
+
+        JsonObject expectedResponseJson = Json.createObjectBuilder()
+                .add("id", 1)
+                .add("time", returnedJsonResponse.get("time")) //hardcoded since it cannot be calculated
+                .add("result", movieJson)
+                .build();
+
+        assertThat(expectedResponseJson, equalTo(returnedJsonResponse));
+    }
     /**
      * Test function that checks if an
      * Exception is thrown when an invalid type
      * is passed.
      */
-    @Test
-    public void exceptionIsThrownWhenTypeIsEmpty(){}
+    @Test(expected = IllegalArgumentException.class)
+    public void exceptionIsThrownWhenTypeIsEmpty() throws Exception {
+        //arrange
+        String type = "";
+
+        PowerMockito.whenNew(Crawler.class).withArguments(domain).thenReturn(crawlMock);
+
+        //act
+        crawlService.findData(baseUri, type, keyword);
+    }
 }

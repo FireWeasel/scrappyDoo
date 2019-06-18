@@ -12,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,7 @@ public class CrawlService {
     /**
      * Last crawl actions executed
      */
-    public List<CrawlAction> lastActions;
+    public List<CrawlAction> lastActions = new ArrayList<>();
 
     /**
      * Object used for crawling a website and scraping web pages
@@ -57,13 +58,30 @@ public class CrawlService {
             long duration = (end - start) / 1000000;
 
             Gson gson = new GsonBuilder().create();
-            List<Item> movies = items.stream().filter(i -> i instanceof Movie).collect(Collectors.toList());
-            List<Item> books = items.stream().filter(i -> i instanceof Book).collect(Collectors.toList());
-            List<Item> music = items.stream().filter(i -> i instanceof Music).collect(Collectors.toList());
+            String moviesJson;
+            String booksJson;
+            String musicJson;
+            if (items != null) {
 
-            String moviesJson = gson.toJson(movies);
-            String booksJson = gson.toJson(books);
-            String musicJson = gson.toJson(music);
+                List<Item> movies = items.stream().filter(i -> i instanceof Movie).collect(Collectors.toList());
+                List<Item> books = items.stream().filter(i -> i instanceof Book).collect(Collectors.toList());
+                List<Item> music = items.stream().filter(i -> i instanceof Music).collect(Collectors.toList());
+
+                moviesJson = gson.toJson(movies);
+                booksJson = gson.toJson(books);
+                musicJson = gson.toJson(music);
+            } else {
+                moviesJson = gson.toJson(new ArrayList<>());
+                booksJson = gson.toJson(new ArrayList<>());
+                musicJson = gson.toJson(new ArrayList<>());
+            }
+            List<String> deduplicated = new ArrayList<>();
+            for (String link : crawler.getVisitedLinks()) {
+                if (!deduplicated.contains(link)) {
+                    deduplicated.add(link);
+                }
+            }
+            lastActions.add(new CrawlAction(crawler.getVisitedLinks().size(), deduplicated.size(), duration, crawler.getDepth()));
 
             JsonObject expectedResponseJson = Json.createObjectBuilder()
                     .add("id", this.id)
@@ -79,7 +97,7 @@ public class CrawlService {
 
     /**
      * Find data in website
-     * @param baseUrl webiste to find data in
+     * @param baseUrl website to find data in
      * @param type - type of website
      * @param keyword - filter by which to look for a specific item
      * @return a JSON response containing scraped data or empty string
@@ -87,8 +105,42 @@ public class CrawlService {
     @GET
     @Path("finddata")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findData(String baseUrl, String type, String keyword) {
-        return  null;
+    public Response findData(String baseUrl, String type, String keyword) throws Exception {
+        if (baseUrl.startsWith("http://")) {
+            if (!(type.equals("Music") || type.equals("Movie") || type.equals("Books"))) {
+                throw new IllegalArgumentException("invalid type");
+            }
+            long start = System.nanoTime();
+            String domain = baseUrl.split("nl/")[0];
+            Crawler crawler = new Crawler(domain + "nl");
+            Item item = crawler.getSpecificData(baseUrl, type, keyword);
+
+            long end = System.nanoTime();
+            long duration = (end - start) / 1000000;
+
+            Gson gson = new GsonBuilder().create();
+            String itemJson;
+            if (item != null) {
+                itemJson = gson.toJson(item);
+            } else {
+                itemJson = gson.toJson(new Object());
+            }
+            List<String> deduplicated = new ArrayList<>();
+            for (String link : crawler.getVisitedLinks()) {
+                if (!deduplicated.contains(link)) {
+                    deduplicated.add(link);
+                }
+            }
+            lastActions.add(new CrawlAction(crawler.getVisitedLinks().size(), deduplicated.size(), duration, crawler.getDepth()));
+
+            JsonObject expectedResponseJson = Json.createObjectBuilder()
+                    .add("id", this.id)
+                    .add("time", Long.toString(duration))
+                    .add("result", itemJson)
+                    .build();
+            return Response.status(200).entity(expectedResponseJson).type(MediaType.APPLICATION_JSON).build();
+        }
+        throw new Exception("Url needs to valid in order to crawl");
     }
 
     /**
@@ -99,6 +151,19 @@ public class CrawlService {
     @Path("lastaction")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getLastCrawlingAction() {
-        return null;
+        if (lastActions.size() == 0) {
+            JsonObject jsonResponse = Json.createObjectBuilder().build();
+            return Response.status(200).entity(jsonResponse).type(MediaType.APPLICATION_JSON).build();
+        }
+        int lastIndex = lastActions.size() - 1;
+        CrawlAction last = lastActions.get(lastIndex);
+        JsonObject jsonResponse = Json.createObjectBuilder()
+                .add("id", this.id)
+                .add("time_elapsed", Long.toString(last.timeElapsed))
+                .add("pages_explored", last.nrOfPagesVisited)
+                .add("unique_pages_explored", last.nrOfUniquePagesVisited)
+                .add("search_depth", last.depth)
+                .build();
+        return Response.status(200).entity(jsonResponse).type(MediaType.APPLICATION_JSON).build();
     }
 }
